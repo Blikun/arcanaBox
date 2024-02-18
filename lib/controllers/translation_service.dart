@@ -9,9 +9,17 @@ class TranslationService {
 
   Future<CardTranslations> getTranslate(String? text) async {
     if (text != null) {
-      var translation = await translator.translate(prepareForTranslate(text),
-          from: baseLanguage, to: language.value);
-      return CardTranslations(bodyText: translation.toString());
+      try {
+        var translation = await translator.translate(
+            prepareForTranslate(text),
+            from: baseLanguage,
+            to: language.value);
+        return CardTranslations(bodyText: translation.toString());
+      } catch (e) {
+        //todo: rework
+        //returning a default error translation by now
+        return CardTranslations(bodyText: "Translation error");
+      }
     }
     return CardTranslations();
   }

@@ -9,11 +9,11 @@ import '../models/card.dart';
 
 class CardDetailsDialog extends StatelessWidget {
   final LCard card;
+  final TranslationService? translationService;
 
-  CardDetailsDialog({super.key, required this.card});
+  CardDetailsDialog({super.key, required this.card, this.translationService});
 
-  final translationService = TranslationService();
-  var alternate = false.obs;
+  final _alternate = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -24,35 +24,48 @@ class CardDetailsDialog extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Stack(
                   children: [
                     Obx(
-                          () => ClipRRect(
+                      () => ClipRRect(
                         borderRadius: BorderRadius.circular(18),
                         child: Transform.translate(
                           offset: Offset.fromDirection(1, -1),
-                          child: alternate.isTrue
+                          child: _alternate.isTrue
                               ? Animate(
-                            autoPlay: true,
-                            onPlay: (controller) => controller.repeat(),
-                            effects: [
-                              ShimmerEffect(
-                                  duration: const Duration(seconds: 6),
-                                  angle: 40,
-                                  colors: [
-                                    Colors.greenAccent.withOpacity(0.15),
-                                    Colors.white.withOpacity(0.3),
-                                    Colors.yellow.withOpacity(0.2),
-                                    Colors.blue.withOpacity(0.15),
-                                    Colors.pinkAccent.withOpacity(0.15),
-                                    Colors.greenAccent.withOpacity(0.15),
-                                  ])
-                            ],
-                            child:
-                            Image.asset(card.enchantedImage!),
-                          )
-                              : Image.network(card.image!),
+                                  autoPlay: true,
+                                  onPlay: (controller) => controller.repeat(),
+                                  effects: [
+                                    ShimmerEffect(
+                                        duration: const Duration(seconds: 6),
+                                        angle: 40,
+                                        colors: Constants.foilColors)
+                                  ],
+                                  child: Image.asset(card.enchantedImage!),
+                                )
+                              : Image.network(
+                                  card.image!,
+                                  errorBuilder: (BuildContext context,
+                                      Object error, StackTrace? stackTrace) {
+                                    return Image.asset(Constants.cardBack);
+                                  },
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Opacity(
+                                        opacity: 0.4,
+                                        child: Image.asset(
+                                          Constants.cardBack,
+                                          color: Colors.black,
+                                        )).animate(effects: [
+                                      const ShimmerEffect(
+                                          duration: Duration(seconds: 1))
+                                    ]);
+                                  },
+                                ),
                         ),
                       ),
                     ),
@@ -63,15 +76,18 @@ class CardDetailsDialog extends StatelessWidget {
                           child: Stack(children: [
                             ElevatedButton(
                                 onPressed: () {
-                                  alternate.value = !alternate.value;
+                                  _alternate.value = !_alternate.value;
                                 },
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: 22),
-                                  child: Text(
-                                    alternate.value ? "Alternate" : "Standard",
-                                    style: const TextStyle(fontSize: 13),
-                                  ),
-                                )),
+                                    padding: const EdgeInsets.only(left: 22),
+                                    child: Obx(
+                                      () => Text(
+                                        _alternate.isTrue
+                                            ? "Alternate"
+                                            : "Standard",
+                                        style: const TextStyle(fontSize: 13),
+                                      ),
+                                    ))),
                             Positioned(
                                 top: 12,
                                 left: 17,
@@ -87,12 +103,12 @@ class CardDetailsDialog extends StatelessWidget {
                 const SizedBox(
                   height: 5,
                 ),
-                TranslationFrame(
-                    translationService: translationService, card: card)
+                if (translationService != null)
+                  TranslationFrame(
+                      translationService: translationService!, card: card)
               ],
             ),
           ),
         ));
   }
 }
-

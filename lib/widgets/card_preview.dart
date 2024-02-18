@@ -33,15 +33,15 @@ class CardPreview extends StatelessWidget {
                 front: GestureDetector(
                     onTap: () => onTap(),
                     child: Stack(
+                      alignment: Alignment.center,
                       children: [
                         child,
                         if (enchantedMark)
                           Positioned(
-                              left: 7,
-                              top: 36,
+                              bottom: 0,
                               child: Image.asset(
                                 Constants.enchanted,
-                                scale: 7,
+                                scale: 9,
                                 isAntiAlias: true,
                               )),
                       ],

@@ -28,7 +28,7 @@ class HomeScreen extends StatelessWidget {
                               childAspectRatio: 693 / 968,
                               mainAxisSpacing: 5,
                               crossAxisSpacing: 5,
-                              crossAxisCount: 2),
+                              crossAxisCount: 3),
                       itemBuilder: (context, index) {
                         return Animate(
                             effects: const [FadeEffect()],
@@ -41,7 +41,10 @@ class HomeScreen extends StatelessWidget {
                                       null),
                               onTap: () {
                                 Get.dialog(CardDetailsDialog(
-                                    card: controller.library[index]));
+                                  card: controller.library[index],
+                                  translationService:
+                                      controller.translationService,
+                                ));
                               },
                             ));
                       });

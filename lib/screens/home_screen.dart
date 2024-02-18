@@ -40,7 +40,7 @@ class HomeScreen extends StatelessWidget {
                                   controller.library[index].enchantedImage !=
                                       null),
                               onTap: () {
-                                Get.dialog(CardDetails(
+                                Get.dialog(CardDetailsDialog(
                                     card: controller.library[index]));
                               },
                             ));

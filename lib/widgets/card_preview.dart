@@ -37,11 +37,11 @@ class CardPreview extends StatelessWidget {
                         child,
                         if (enchantedMark)
                           Positioned(
-                              left: 6,
+                              left: 7,
                               top: 36,
                               child: Image.asset(
                                 Constants.enchanted,
-                                scale: 6.5,
+                                scale: 7,
                                 isAntiAlias: true,
                               )),
                       ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 
+import '../constants.dart';
 import '../controllers/library_controller.dart';
 import 'card_details_dialog.dart';
 import 'card_preview.dart';
@@ -21,7 +22,7 @@ class CardGrid extends StatelessWidget {
             padding: const EdgeInsets.all(5),
             itemCount: libraryController.library.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                childAspectRatio: 693 / 968,
+                childAspectRatio: Constants.cardAspectRatio,
                 mainAxisSpacing: 5,
                 crossAxisSpacing: 5,
                 crossAxisCount: 3),

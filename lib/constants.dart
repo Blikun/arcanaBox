@@ -9,14 +9,14 @@ class Constants {
 
   ///const styles
   static final TextStyle cabinStyle = GoogleFonts.cabinCondensed(
-      fontSize: 14.5,
+      fontSize: 16.5,
       color: Colors.black.withOpacity(0.8),
-      fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w500,
       height: 0,
       letterSpacing: 0,
       wordSpacing: 0);
 
-  static final TextStyle googleHeebo = GoogleFonts.heebo(
+  static final TextStyle googleHeebo = GoogleFonts.josefinSans(
       fontSize: 14,
       color: Colors.black87,
       fontWeight: FontWeight.w500,

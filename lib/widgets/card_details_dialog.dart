@@ -56,14 +56,20 @@ class CardDetailsDialog extends StatelessWidget {
                                       ImageChunkEvent? loadingProgress) {
                                     if (loadingProgress == null) return child;
                                     return Opacity(
-                                        opacity: 0.4,
-                                        child: Image.asset(
-                                          Constants.cardBack,
-                                          color: Colors.black,
-                                        )).animate(effects: [
-                                      const ShimmerEffect(
-                                          duration: Duration(seconds: 1))
-                                    ]);
+                                            opacity: 0.4,
+                                            child: Image.asset(
+                                              Constants.cardBack,
+                                              color: Colors.black,
+                                            ))
+                                        .animate(
+                                            onPlay: (controller) =>
+                                                controller.repeat(),
+                                            effects: [
+                                          ShimmerEffect(
+                                              duration: const Duration(seconds: 1),
+                                              color: Colors.purple
+                                                  .withOpacity(0.2))
+                                        ]);
                                   },
                                 ),
                         ),

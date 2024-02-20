@@ -38,7 +38,7 @@ class TranslationFrame extends StatelessWidget {
                             image: AssetImage(
                               Constants.cadCanvas,
                             ),
-                            fit: BoxFit.fitWidth)),
+                            fit: BoxFit.fill)),
                     width: double.infinity,
                     child: FutureBuilder<CardTranslations>(
                         future: translationService.getTranslate(card.bodyText),
@@ -52,7 +52,9 @@ class TranslationFrame extends StatelessWidget {
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 8, vertical: 10),
-                                child: Utils().buildRichTextWithItalics(snapshot.data!.bodyText!).animate(effects: [
+                                child: Utils()
+                                    .buildRichText(snapshot.data!.bodyText!)
+                                    .animate(effects: [
                                   FadeEffect(duration: 200.milliseconds)
                                 ]),
                               );
@@ -65,11 +67,13 @@ class TranslationFrame extends StatelessWidget {
                 ),
                 Positioned(
                   right: 15,
-                  bottom: 0,
+                  bottom: 1.5,
                   child: Text(
                     "Unofficial translation",
-                    style: Constants.googleHeebo
-                        .copyWith(color: Colors.white.withOpacity(0.75), fontSize: 8,),
+                    style: Constants.googleHeebo.copyWith(
+                      color: Colors.white.withOpacity(0.75),
+                      fontSize: 9,
+                    ),
                   ),
                 )
               ],

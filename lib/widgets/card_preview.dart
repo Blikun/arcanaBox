@@ -24,8 +24,8 @@ class CardPreview extends StatelessWidget {
         offset: Offset.fromDirection(1, -1),
         child: Image.network(
           image,
-          cacheHeight: 306,
-          cacheWidth: 220,
+          cacheHeight: 260,
+          cacheWidth: 187,
           loadingBuilder: (BuildContext context, Widget child,
               ImageChunkEvent? loadingProgress) {
             if (loadingProgress == null) {
@@ -57,11 +57,11 @@ class CardPreview extends StatelessWidget {
                   ),
                 ),
                 speed: 300,
-                autoFlipDuration: 0.seconds,
+                autoFlipDuration: 0.1.seconds,
                 side: CardSide.BACK,
               );
             }
-            return Center(
+            return SizedBox(
               child: Image.asset(Constants.cardBack),
             );
           },

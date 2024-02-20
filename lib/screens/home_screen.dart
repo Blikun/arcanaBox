@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 
-import '../widgets/card_details_dialog.dart';
-import '../widgets/card_preview.dart';
+import '../widgets/card_grid.dart';
 
 class HomeScreen extends StatelessWidget {
   final libraryController = Get.put(LibraryController());
@@ -18,38 +17,10 @@ class HomeScreen extends StatelessWidget {
         body: Column(
           children: [
             Expanded(
-              child: GetX<LibraryController>(
-                builder: (controller) {
-                  return GridView.builder(
-                      padding: const EdgeInsets.all(5),
-                      itemCount: controller.library.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              childAspectRatio: 693 / 968,
-                              mainAxisSpacing: 5,
-                              crossAxisSpacing: 5,
-                              crossAxisCount: 3),
-                      itemBuilder: (context, index) {
-                        return Animate(
-                            effects: const [FadeEffect()],
-                            child: CardPreview(
-                              image: controller.library[index].image,
-                              enchantedMark: (controller
-                                          .library[index].enchantedImage !=
-                                      "" &&
-                                  controller.library[index].enchantedImage !=
-                                      null),
-                              onTap: () {
-                                Get.dialog(CardDetailsDialog(
-                                  card: controller.library[index],
-                                  translationService:
-                                      controller.translationService,
-                                ));
-                              },
-                            ));
-                      });
-                },
-              ),
+              child: CardGrid()
+                  .animate(effects: [
+                const FadeEffect(duration: Duration(seconds: 2))
+              ]),
             ),
           ],
         ),

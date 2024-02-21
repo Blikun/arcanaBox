@@ -18,7 +18,7 @@ class TextLoadingProgressIndicator extends StatelessWidget {
     );
   }
 
-  Widget _buildAnimatedDivider({double delay = 0.0, double endIndent = 0.0}) {
+  Widget _buildAnimatedDivider({double delay = 0, double endIndent = 0}) {
     return Animate(
       onPlay: (controller) => controller.repeat(),
       effects: [ShimmerEffect(duration: 1.seconds, delay: delay.seconds)],

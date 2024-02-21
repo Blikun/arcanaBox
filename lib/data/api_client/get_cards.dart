@@ -11,7 +11,7 @@ class GetCards extends LorcanaApi {
   }
 
   @override
-  Future<List<LCard>> fetchPage(int page) async {
+  Future<List<LCard>> fetch(int page) async {
     List<LCard> cards = [];
     final response = await dio.get("${super.cardsFetch}?page=$page&pagesize=${super.pageSize}");
     cards = List<LCard>.from(response.data.map((x) => LCard.fromJson(x)));

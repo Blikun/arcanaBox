@@ -4,11 +4,12 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 
 import '../widgets/card_grid.dart';
+import '../widgets/filter_bar.dart';
 
-class HomeScreen extends StatelessWidget {
+class LibraryScreen extends StatelessWidget {
   final libraryController = Get.put(LibraryController());
 
-  HomeScreen({super.key});
+  LibraryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,11 +17,11 @@ class HomeScreen extends StatelessWidget {
       child: Scaffold(
         body: Column(
           children: [
+            const FilterBar(),
+            const SizedBox(height: 5,),
             Expanded(
-              child: CardGrid()
-                  .animate(effects: [
-                const FadeEffect(duration: Duration(seconds: 2))
-              ]),
+              child: CardGrid().animate(
+                  effects: [const FadeEffect(duration: Duration(seconds: 2))]),
             ),
           ],
         ),
@@ -28,3 +29,4 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+

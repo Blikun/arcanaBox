@@ -7,6 +7,7 @@ class Constants {
   static const String cardBack = "assets/cardback.webp";
   static const String enchanted = "assets/enchanted.png";
   static const String cadCanvas = "assets/canvas.png";
+  static const String decorationFrame = "assets/decoration_frame.png";
 
   ///static styles
   static final TextStyle cabinStyle = GoogleFonts.cabinCondensed(
@@ -27,6 +28,10 @@ class Constants {
 
   ///static values
   static const cardAspectRatio = 693 / 985;
+
+  static const amethystColor = Color(0xFF1F1D2A);
+  static const goldColor = Color(0xFFE3C886);
+
   static final List<Color> foilColors = [
     Colors.greenAccent.withOpacity(0.15),
     Colors.white.withOpacity(0.2),
@@ -35,4 +40,11 @@ class Constants {
     Colors.pinkAccent.withOpacity(0.15),
     Colors.greenAccent.withOpacity(0.15),
   ];
+}
+
+enum CommState {
+  loading,
+  done,
+  error,
+  idle
 }

@@ -1,4 +1,4 @@
-import 'package:arcana_box/screens/home_screen.dart';
+import 'package:arcana_box/screens/library_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -19,7 +19,7 @@ class AppMain extends StatelessWidget {
         colorScheme: const ColorScheme.dark(),
         useMaterial3: true,
       ),
-      home: HomeScreen(),
+      home: LibraryScreen(),
     );
   }
 }

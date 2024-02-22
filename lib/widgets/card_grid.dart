@@ -19,7 +19,7 @@ class CardGrid extends StatelessWidget {
     return GetX<LibraryController>(
       builder: (controller) {
         return GridView.builder(
-          controller: libraryController.scrollController,
+            controller: libraryController.scrollController,
             padding: const EdgeInsets.all(5),
             itemCount: libraryController.library.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -49,5 +49,4 @@ class CardGrid extends StatelessWidget {
       },
     );
   }
-
 }

@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flip_card/flip_card.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../constants.dart';
 
@@ -29,40 +27,50 @@ class CardPreview extends StatelessWidget {
           loadingBuilder: (BuildContext context, Widget child,
               ImageChunkEvent? loadingProgress) {
             if (loadingProgress == null) {
-              return FlipCard(
-                front: GestureDetector(
-                    onTap: () => onTap(),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        child,
-                        if (enchantedMark)
-                          Positioned(
-                              bottom: 0,
-                              child: Image.asset(
-                                Constants.enchanted,
-                                scale: 9,
-                                isAntiAlias: true,
-                              )),
-                      ],
-                    )),
-                flipOnTouch: false,
-                back: ClipRRect(
-                  borderRadius: BorderRadius.circular(14),
-                  child: Transform.translate(
-                    offset: Offset.fromDirection(1, -1),
-                    child: Image.asset(
-                      Constants.cardBack,
-                    ),
-                  ),
-                ),
-                speed: 300,
-                autoFlipDuration: 0.1.seconds,
-                side: CardSide.BACK,
-              );
+              return GestureDetector(
+                  onTap: () => onTap(),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      child.animate(effects: [
+                        const FlipEffect(
+                            direction: Axis.horizontal,
+                            curve: Curves.fastEaseInToSlowEaseOut)
+                      ]),
+                      if (enchantedMark)
+                        Positioned(
+                            bottom: 0,
+                            child: Image.asset(
+                              Constants.enchanted,
+                              scale: 9,
+                              isAntiAlias: true,
+                            )),
+                    ],
+                  ));
             }
-            return SizedBox(
-              child: Image.asset(Constants.cardBack),
+            return Animate(
+              effects: const [FadeEffect()],
+              child: Opacity(
+                opacity: 0.3,
+                child: Image.asset(
+                  Constants.cardBack,
+                  cacheWidth: 187,
+                  cacheHeight: 260,
+                ),
+              ),
+            );
+          },
+          errorBuilder: (context, object, e) {
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(14),
+              child: Transform.translate(
+                offset: Offset.fromDirection(1, -1),
+                child: Image.asset(
+                  Constants.cardBack,
+                  color: Colors.black87,
+                  colorBlendMode: BlendMode.color,
+                ),
+              ),
             );
           },
         ),

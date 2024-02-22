@@ -1,3 +1,5 @@
+
+import 'package:arcana_box/constants.dart';
 import 'package:arcana_box/controllers/translation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:arcana_box/data/api_client/get_cards.dart';
@@ -6,6 +8,7 @@ import 'package:get/get.dart';
 
 
 class LibraryController extends GetxController {
+  final commState = CommState.idle.obs;
   final RxList<LCard> library = RxList();
   final lastPageFetched = 0.obs;
   final translationService = Get.put(TranslationService());
@@ -19,38 +22,26 @@ class LibraryController extends GetxController {
   }
 
   void fetchPaginated(int page) async {
+    if (commState.value != CommState.idle) return;
+    print("loading page: $page");
+    commState.value = CommState.loading;
     List<LCard> fetchedCards = await GetCards().fetch(page);
     for (LCard card in fetchedCards) {
       if (!library.contains(card)) {
         library.add(card);
       }
     }
+    print("loading done: $page");
     lastPageFetched.value = page;
+    commState.value = CommState.idle;
   }
 
   addItems() async {
     scrollController.addListener(() {
-      if (scrollController.position.maxScrollExtent == scrollController.position.pixels) {
-        for (int i = 0; i < 1; i++) {
-
-          print("LOAD");
+      if (scrollController.position.maxScrollExtent - 250 <= scrollController.position.pixels) {
           fetchPaginated(lastPageFetched.value+1);
-
-        }
       }
     });
   }
-
-
- // Future<bool> tryAddTranslation(index) async {
- //   bool connectivity = await InternetConnection().hasInternetAccess;
- //   if (connectivity) {
- //     CardTranslations translations =
- //         await translationService.getTranslate(library[index].bodyText);
- //     library[index].cardTranslations = translations;
- //     return translations != null;
- //   }
- //   return true;
- // }
 
 }

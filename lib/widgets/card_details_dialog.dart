@@ -4,7 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import '../constants.dart';
 import '../controllers/translation_service.dart';
-import '../models/card.dart';
+import '../data/models/card.dart';
 
 class CardDetailsDialog extends StatelessWidget {
   final LCard card;

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import '../utils.dart';
+import '../../utils.dart';
+
 
 List<LCard> cardFromJson(String str) => List<LCard>.from(json.decode(str).map((x) => LCard.fromJson(x)));
 

@@ -1,5 +1,6 @@
 import 'package:arcana_box/data/api_client/lorcana_api.dart';
-import 'package:arcana_box/models/card.dart';
+
+import '../models/card.dart';
 
 class GetCards extends LorcanaApi {
   @override

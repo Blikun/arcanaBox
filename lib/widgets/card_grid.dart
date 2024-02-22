@@ -18,34 +18,40 @@ class CardGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetX<LibraryController>(
       builder: (controller) {
-        return GridView.builder(
-            controller: libraryController.scrollController,
-            padding: const EdgeInsets.all(5),
-            itemCount: libraryController.library.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                childAspectRatio: Constants.cardAspectRatio,
-                mainAxisSpacing: 5,
-                crossAxisSpacing: 5,
-                crossAxisCount: 3),
-            itemBuilder: (context, index) {
-              return Animate(
-                  effects: const [FadeEffect()],
-                  child: CardPreview(
-                    image: libraryController.library[index].image!,
-                    enchantedMark:
-                        (libraryController.library[index].enchantedImage !=
-                                "" &&
-                            libraryController.library[index].enchantedImage !=
-                                null),
-                    onTap: () {
-                      Get.dialog(CardDetailsDialog(
-                        card: libraryController.library[index],
-                        translationService:
-                            libraryController.translationService,
-                      ));
-                    },
-                  ));
-            });
+        return Column(
+          children: [
+            Expanded( // Ensure the GridView takes up all available space, minus the loading indicator
+              child: GridView.builder(
+                controller: libraryController.scrollController,
+                padding: const EdgeInsets.all(5),
+                itemCount: libraryController.library.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: Constants.cardAspectRatio,
+                  mainAxisSpacing: 5,
+                  crossAxisSpacing: 5,
+                  crossAxisCount: 3,
+                ),
+                itemBuilder: (context, index) {
+                  return Animate(
+                    effects: const [FadeEffect()],
+                    child: CardPreview(
+                      image: libraryController.library[index].image!,
+                      enchantedMark: (libraryController.library[index].enchantedImage != "" && libraryController.library[index].enchantedImage != null),
+                      onTap: () {
+                        Get.dialog(CardDetailsDialog(
+                          card: libraryController.library[index],
+                          translationService: libraryController.translationService,
+                        ));
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+            if (libraryController.commState.value == CommState.loading)
+              const LinearProgressIndicator(color: Constants.goldColor,),
+          ],
+        );
       },
     );
   }

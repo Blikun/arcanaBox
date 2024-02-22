@@ -5,7 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../constants.dart';
 import '../controllers/translation_service.dart';
-import '../models/card.dart';
+import '../data/models/card.dart';
 import '../utils.dart';
 
 class TranslationFrame extends StatelessWidget {

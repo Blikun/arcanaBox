@@ -3,8 +3,9 @@ import 'package:arcana_box/constants.dart';
 import 'package:arcana_box/controllers/translation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:arcana_box/data/api_client/get_cards.dart';
-import 'package:arcana_box/models/card.dart';
 import 'package:get/get.dart';
+
+import '../data/models/card.dart';
 
 
 class LibraryController extends GetxController {

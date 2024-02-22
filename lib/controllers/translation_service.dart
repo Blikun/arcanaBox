@@ -1,6 +1,7 @@
-import 'package:arcana_box/models/card.dart';
 import 'package:get/get.dart';
 import 'package:translator/translator.dart';
+
+import '../data/models/card.dart';
 
 class TranslationService {
   final language = "es".obs;

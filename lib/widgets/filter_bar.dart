@@ -2,72 +2,171 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../constants.dart';
+import '../controllers/library_controller.dart';
+import 'ink_icon.dart';
 
 class FilterBar extends StatelessWidget {
-  const FilterBar({
+  FilterBar({
     super.key,
   });
 
+  final libraryController = Get.find<LibraryController>();
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
       children: [
         Stack(
           children: [
-            AnimatedContainer(
-              duration: 1.seconds,
-              width: double.infinity,
-              height: 55,
-              decoration: const BoxDecoration(
-                color: Constants.amethystColor,
-                image: DecorationImage(
-                    image: AssetImage(Constants.decorationFrame),
-                    alignment: Alignment.bottomCenter,
-                    fit: BoxFit.cover,
-                    opacity: 0.1),
-              ),
-              child: Row(
-                children: [
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.filter_list_rounded,
-                        color: Constants.goldColor,
-                      ))
-                ],
-              ), // Your existing container
-            ),
             Positioned(
               bottom: 0,
               left: 0,
               right: 0,
               child: Container(
-                height: 50, // Height of the gradient line
+                height: 50,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
                       Colors.transparent,
-                      // Start with transparent color
                       Constants.goldColor.withOpacity(0.15),
-                      // End with yellow color
                     ],
-                    begin: Alignment.topCenter, // Gradient starts from the top
-                    end: Alignment.bottomCenter, // And ends at the bottom
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
                 ),
               ),
             ),
+            AnimatedContainer(
+              duration: 0.5.seconds,
+              width: double.infinity,
+              curve: Curves.decelerate,
+              height: 50,
+              decoration: const BoxDecoration(
+                color: Colors.transparent,
+                image: DecorationImage(
+                    image: AssetImage(Constants.decorationFrame),
+                    alignment: Alignment.bottomCenter,
+                    fit: BoxFit.cover,
+                    opacity: 0.2),
+              ),
+              child: GetBuilder<LibraryController>(builder: (context) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const SizedBox(
+                      width: 45,
+                    ),
+                    Row(
+                      children: [
+                        InkIcon(
+                          ink: Constants.inkSteel,
+                          color: Constants.steelColor,
+                          selected:
+                              libraryController.filterController.color.value ==
+                                      "Steel"
+                                  ? true
+                                  : false,
+                          onTap: () {
+                            libraryController.filterController
+                                .updateColor("Steel");
+                            libraryController.update();
+                          },
+                        ),
+                        InkIcon(
+                          ink: Constants.inkRuby,
+                          color: Constants.rubyColor,
+                          selected:
+                              libraryController.filterController.color.value ==
+                                      "Ruby"
+                                  ? true
+                                  : false,
+                          onTap: () {
+                            libraryController.filterController
+                                .updateColor("Ruby");
+                            libraryController.update();
+                          },
+                        ),
+                        InkIcon(
+                          ink: Constants.inkAmber,
+                          color: Constants.amberColor,
+                          selected:
+                              libraryController.filterController.color.value ==
+                                      "Amber"
+                                  ? true
+                                  : false,
+                          onTap: () {
+                            libraryController.filterController
+                                .updateColor("Amber");
+                            libraryController.update();
+                          },
+                        ),
+                        InkIcon(
+                          ink: Constants.inkEmerald,
+                          color: Constants.emeraldColor,
+                          selected:
+                              libraryController.filterController.color.value ==
+                                      "Emerald"
+                                  ? true
+                                  : false,
+                          onTap: () {
+                            libraryController.filterController
+                                .updateColor("Emerald");
+                            libraryController.update();
+                          },
+                        ),
+                        InkIcon(
+                          ink: Constants.inkSapphire,
+                          color: Constants.sapphireColor,
+                          selected:
+                              libraryController.filterController.color.value ==
+                                      "Sapphire"
+                                  ? true
+                                  : false,
+                          onTap: () {
+                            libraryController.filterController
+                                .updateColor("Sapphire");
+                            libraryController.update();
+                          },
+                        ),
+                        InkIcon(
+                          ink: Constants.inkAmethyst,
+                          color: Constants.amethystColor,
+                          selected:
+                              libraryController.filterController.color.value ==
+                                      "Amethyst"
+                                  ? true
+                                  : false,
+                          onTap: () {
+                            libraryController.filterController
+                                .updateColor("Amethyst");
+                            libraryController.update();
+                          },
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        libraryController.clearLibrary(paginateClear: true);
+                        libraryController.paginateLibrary();
+                      },
+                      icon: Icon(
+                        Icons.youtube_searched_for,
+                        color: Constants.goldColor.withOpacity(0.5),
+                        size: 30,
+                      ),
+                      highlightColor: Constants.goldColor.withOpacity(0.05),
+                      padding: EdgeInsets.all(2),
+                    ),
+                  ],
+                );
+              }),
+            ),
           ],
         ),
-        Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          child: Container(
-            height: 5, // Height of the gradient line
-            decoration:
-                BoxDecoration(color: Constants.goldColor.withOpacity(0.9)),
-          ),
+        Container(
+          height: 5,
+          decoration:
+              BoxDecoration(color: Constants.goldColor.withOpacity(0.9)),
         ),
       ],
     );

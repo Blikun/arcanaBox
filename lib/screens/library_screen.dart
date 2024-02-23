@@ -17,7 +17,7 @@ class LibraryScreen extends StatelessWidget {
       child: Scaffold(
         body: Column(
           children: [
-            const FilterBar(),
+            FilterBar(),
             const SizedBox(height: 5,),
             Expanded(
               child: CardGrid().animate(

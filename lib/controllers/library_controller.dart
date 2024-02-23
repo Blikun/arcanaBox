@@ -3,6 +3,7 @@ import 'package:arcana_box/controllers/FilterController.dart';
 import 'package:arcana_box/controllers/translation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:arcana_box/data/api_client/get_cards.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 
 import '../data/models/card.dart';
@@ -28,7 +29,9 @@ class LibraryController extends GetxController {
   void paginationListener() async {
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent - 250 <=
-          scrollController.position.pixels) {
+              scrollController.position.pixels &&
+          scrollController.position.userScrollDirection ==
+              ScrollDirection.reverse) {
         paginateLibrary();
       }
     });

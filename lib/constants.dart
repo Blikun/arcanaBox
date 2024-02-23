@@ -47,6 +47,15 @@ class Constants {
   static const steelColor = Color(0xFF9AA4AD);
   static const amberColor = Color(0xFFECAE0D);
 
+  static const List<Map<String, dynamic>> inkColors = [
+    {'ink': Constants.inkSteel, 'color': Constants.steelColor, 'name': "Steel"},
+    {'ink': Constants.inkRuby, 'color': Constants.rubyColor, 'name': "Ruby"},
+    {'ink': Constants.inkAmber, 'color': Constants.amberColor, 'name': "Amber"},
+    {'ink': Constants.inkEmerald, 'color': Constants.emeraldColor, 'name': "Emerald"},
+    {'ink': Constants.inkSapphire, 'color': Constants.sapphireColor, 'name': "Sapphire"},
+    {'ink': Constants.inkAmethyst, 'color': Constants.amethystColor, 'name': "Amethyst"},
+  ];
+
   static final List<Color> foilColors = [
     Colors.greenAccent.withOpacity(0.15),
     Colors.white.withOpacity(0.2),

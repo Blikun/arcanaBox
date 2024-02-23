@@ -20,7 +20,8 @@ class CardGrid extends StatelessWidget {
       builder: (controller) {
         return Column(
           children: [
-            Expanded( // Ensure the GridView takes up all available space, minus the loading indicator
+            Expanded(
+              // Ensure the GridView takes up all available space, minus the loading indicator
               child: GridView.builder(
                 controller: libraryController.scrollController,
                 padding: const EdgeInsets.all(5),
@@ -36,11 +37,16 @@ class CardGrid extends StatelessWidget {
                     effects: const [FadeEffect()],
                     child: CardPreview(
                       image: libraryController.library[index].image!,
-                      enchantedMark: (libraryController.library[index].enchantedImage != "" && libraryController.library[index].enchantedImage != null),
+                      enchantedMark:
+                          (libraryController.library[index].enchantedImage !=
+                                  "" &&
+                              libraryController.library[index].enchantedImage !=
+                                  null),
                       onTap: () {
                         Get.dialog(CardDetailsDialog(
                           card: libraryController.library[index],
-                          translationService: libraryController.translationService,
+                          translationService:
+                              libraryController.translationService,
                         ));
                       },
                     ),
@@ -48,8 +54,6 @@ class CardGrid extends StatelessWidget {
                 },
               ),
             ),
-            if (libraryController.commState.value == CommState.loading)
-              const LinearProgressIndicator(color: Constants.goldColor,),
           ],
         );
       },

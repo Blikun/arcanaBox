@@ -1,6 +1,7 @@
 import 'package:arcana_box/widgets/text_progress_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import '../constants.dart';
@@ -25,44 +26,59 @@ class TranslationFrame extends StatelessWidget {
             effects: const [FadeEffect()],
             child: Stack(
               children: [
-                Container(
-                  padding: const EdgeInsets.all(13),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.black,
-                  ),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 220),
                   child: Container(
+                    padding: const EdgeInsets.all(13),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(2),
-                        image: const DecorationImage(
-                            image: AssetImage(
-                              Constants.cadCanvas,
-                            ),
-                            fit: BoxFit.fill)),
-                    width: double.infinity,
-                    child: FutureBuilder<CardTranslations>(
-                        future: translationService.getTranslate(card.bodyText),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                                child: TextLoadingProgressIndicator());
-                          } else {
-                            if (snapshot.data!.bodyText != null) {
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 10),
-                                child: Utils()
-                                    .buildRichText(snapshot.data!.bodyText!)
-                                    .animate(effects: [
-                                  FadeEffect(duration: 200.milliseconds)
-                                ]),
-                              );
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.black,
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(2),
+                          image: const DecorationImage(
+                              image: AssetImage(
+                                Constants.cadCanvas,
+                              ),
+                              fit: BoxFit.fill)),
+                      width: double.infinity,
+                      child: FutureBuilder<CardTranslations>(
+                          future:
+                              translationService.getTranslate(card.bodyText),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: TextLoadingProgressIndicator());
                             } else {
-                              return const Text(" No translation available ");
+                              if (snapshot.data!.bodyText != null) {
+                                return RawScrollbar(
+                                  thickness: 3,
+                                  thumbColor: Colors.black,
+                                  thumbVisibility: true,
+                                  padding: const EdgeInsets.only(right: 1.5),
+                                  radius: const Radius.circular(90),
+                                  mainAxisMargin: 1.5,
+                                  child: SingleChildScrollView(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 10),
+                                      child: Utils()
+                                          .buildRichText(
+                                              snapshot.data!.bodyText!)
+                                          .animate(effects: [
+                                        FadeEffect(duration: 200.milliseconds)
+                                      ]),
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                return const Text(" No translation available ");
+                              }
                             }
-                          }
-                        }),
+                          }),
+                    ),
                   ),
                 ),
                 Positioned(

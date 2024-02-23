@@ -2,9 +2,11 @@ import 'package:arcana_box/widgets/translation_frame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
+import 'package:icon_decoration/icon_decoration.dart';
 import '../constants.dart';
 import '../controllers/translation_service.dart';
 import '../data/models/card.dart';
+import 'dart:math' as math;
 
 class CardDetailsDialog extends StatelessWidget {
   final LCard card;
@@ -13,6 +15,7 @@ class CardDetailsDialog extends StatelessWidget {
   CardDetailsDialog({super.key, required this.card, this.translationService});
 
   final RxBool _hasAlternateArt = false.obs;
+  final RxBool _rotated = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -23,23 +26,34 @@ class CardDetailsDialog extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             children: [
-              Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(18),
-                    child: Transform.translate(
-                      offset: Offset.fromDirection(1, -1),
-                      child: Obx(() => _hasAlternateArt.isTrue
-                          ? _enchantedDisplay()
-                          : _standardDisplay()),
+              Obx(() {
+                return AnimatedScale(
+                  scale: _rotated.isTrue ? 0.72 : 1,
+                  curve: Curves.fastEaseInToSlowEaseOut,
+                  duration: const Duration(milliseconds: 500),
+                  child: Transform.rotate(
+                    angle: _rotated.isTrue ? -math.pi / -2 : 0,
+                    child: Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(18),
+                          child: Transform.translate(
+                            offset: Offset.fromDirection(1, -1),
+                            child: Obx(() =>
+                            _hasAlternateArt.isTrue
+                                ? _enchantedDisplay()
+                                : _standardDisplay()),
+                          ),
+                        ),
+                        if (card.enchantedImage?.isNotEmpty ?? false)
+                          _enchantedButton(),
+                        if (card.type == 'Location') _rotateButton(),
+                      ],
                     ),
                   ),
-                  if (card.enchantedImage?.isNotEmpty ?? false)
-                    _enchantedButton(),
-                ],
-              ),
+                );
+              }),
               const SizedBox(height: 5),
               if (translationService != null)
                 TranslationFrame(
@@ -99,9 +113,10 @@ class CardDetailsDialog extends StatelessWidget {
             onPressed: () => _hasAlternateArt.toggle(),
             child: Padding(
               padding: const EdgeInsets.only(left: 22),
-              child: Obx(() => Text(
-                  _hasAlternateArt.isTrue ? "Alternate" : "Standard",
-                  style: const TextStyle(fontSize: 13))),
+              child: Obx(() =>
+                  Text(
+                      _hasAlternateArt.isTrue ? "Alternate" : "Standard",
+                      style: const TextStyle(fontSize: 13))),
             ),
           ),
           Positioned(
@@ -114,6 +129,29 @@ class CardDetailsDialog extends StatelessWidget {
                 ),
               )),
         ],
+      ),
+    );
+  }
+
+  Widget _rotateButton() {
+    return Positioned(
+      right: 0,
+      bottom: _rotated.isTrue ? null : 0,
+      child: IconButton(
+        onPressed: () {
+          _rotated.value = !_rotated.value;
+        },
+        highlightColor: Colors.black38,
+        padding: EdgeInsets.zero,
+        icon: const DecoratedIcon(
+          icon: Icon(
+            Icons.rotate_90_degrees_cw_rounded,
+            color: Constants.goldColor,
+            size: 35,
+          ),
+          decoration: IconDecoration(
+              border: IconBorder(width: 10, color: Colors.black87)),
+        ),
       ),
     );
   }

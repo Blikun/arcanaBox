@@ -1,4 +1,5 @@
 import 'package:arcana_box/data/api_client/lorcana_api.dart';
+import 'package:flutter/material.dart';
 
 import '../models/card.dart';
 
@@ -7,7 +8,6 @@ class GetCards extends LorcanaApi {
   Future<List<LCard>> all() async {
     List<LCard> cards = [];
     final response = await dio.get(super.cardsAll);
-
 
     cards = List<LCard>.from(response.data.map((x) => LCard.fromJson(x)));
     return cards;
@@ -19,7 +19,6 @@ class GetCards extends LorcanaApi {
     final response = await dio
         .get("${super.cardsFetch}?page=$page&pagesize=${super.pageSize}");
 
-
     cards = List<LCard>.from(response.data.map((x) => LCard.fromJson(x)));
     return cards;
   }
@@ -30,7 +29,7 @@ class GetCards extends LorcanaApi {
     String? name,
     String? rarity,
     String? inkable,
-    int? cost,
+    List<int>? cost,
     String? color,
     int? cardNum,
     int? setNum,
@@ -39,7 +38,7 @@ class GetCards extends LorcanaApi {
     String? bodyText,
     int? willpower,
     int? strength,
-    int? lore,
+    List<int>? lore,
     int page,
   ) async {
     List<String> searchParams = [];
@@ -49,7 +48,8 @@ class GetCards extends LorcanaApi {
     if (rarity != null) searchParams.add("Rarity=$rarity");
     if (inkable != null) searchParams.add("Inkable=$inkable");
     if (cost != null) {
-      searchParams.add("Cost>$cost");
+      searchParams.add("Cost>${cost[0]-1}");
+      searchParams.add("Cost<${cost[1]+1}");
     }
     if (color != null) searchParams.add("Color=$color");
     if (cardNum != null) searchParams.add("CardNum=$cardNum");
@@ -59,12 +59,14 @@ class GetCards extends LorcanaApi {
     if (bodyText != null) searchParams.add("BodyText=$bodyText");
     if (willpower != null) searchParams.add("Willpower=$willpower");
     if (strength != null) searchParams.add("Strength=$strength");
-    if (lore != null) searchParams.add("Lore=$lore");
+    if (lore != null)  {
+      searchParams.add("Lore>${lore[0]-1}");
+      searchParams.add("Lore<${lore[1]+1}");
+    }
 
     String searchQuery = searchParams.join(';');
     final response = await dio.get(
         '${super.cardsFetch}?page=$page&pagesize=${super.pageSize}&search=$searchQuery');
-
 
     List<LCard> cards =
         List<LCard>.from(response.data.map((x) => LCard.fromJson(x)));

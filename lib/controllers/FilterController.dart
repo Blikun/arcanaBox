@@ -5,7 +5,7 @@ class FilterController extends GetxController {
   final Rx<String?> name = Rx<String?>(null);
   final Rx<String?> rarity = Rx<String?>(null);
   final Rx<String?> inkable = Rx<String?>(null);
-  final Rx<int?> cost = Rx<int?>(null);
+  final Rx<List<int>> cost = Rx<List<int>>([1,10]);
   final Rx<String?> color = Rx<String?>(null);
   final Rx<int?> cardNum = Rx<int?>(null);
   final Rx<int?> setNum = Rx<int?>(null);
@@ -14,7 +14,7 @@ class FilterController extends GetxController {
   final Rx<String?> bodyText = Rx<String?>(null);
   final Rx<int?> willpower = Rx<int?>(null);
   final Rx<int?> strength = Rx<int?>(null);
-  final Rx<int?> lore = Rx<int?>(null);
+  final Rx<List<int>> lore = Rx<List<int>>([1,5]);
 
   // update values
   void updateType(String? newValue) {
@@ -49,12 +49,8 @@ class FilterController extends GetxController {
     }
   }
 
-  void updateCost(int? newValue) {
-    if (cost.value == newValue) {
-      cost.value = null;
-    } else {
+  void updateCost(List<int> newValue) {
       cost.value = newValue;
-    }
   }
 
   void updateColor(String? newValue) {
@@ -121,12 +117,8 @@ class FilterController extends GetxController {
     }
   }
 
-  void updateLore(int? newValue) {
-    if (lore.value == newValue) {
-      lore.value = null;
-    } else {
+  void updateLore(List<int> newValue) {
       lore.value = newValue;
-    }
   }
 
   // clear
@@ -135,7 +127,7 @@ class FilterController extends GetxController {
     name.value = null;
     rarity.value = null;
     inkable.value = null;
-    cost.value = null;
+    cost.value = [1,10];
     color.value = null;
     cardNum.value = null;
     setNum.value = null;
@@ -144,7 +136,7 @@ class FilterController extends GetxController {
     bodyText.value = null;
     willpower.value = null;
     strength.value = null;
-    lore.value = null;
+    lore.value = [1,5];
   }
 
   bool hasActiveFilters() {

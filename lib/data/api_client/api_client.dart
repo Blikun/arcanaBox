@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import '../models/card.dart';
 
 abstract class ApiClient {
@@ -10,7 +12,7 @@ abstract class ApiClient {
       String? name,
       String? rarity,
       String? inkable,
-      int? cost,
+      List<int>? cost,
       String? color,
       int? cardNum,
       int? setNum,
@@ -19,6 +21,6 @@ abstract class ApiClient {
       String? bodyText,
       int? willpower,
       int? strength,
-      int? lore,
+      List<int>? lore,
       int page,);
 }

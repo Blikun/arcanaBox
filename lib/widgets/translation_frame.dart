@@ -49,8 +49,10 @@ class TranslationFrame extends StatelessWidget {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return const Center(
-                                  child: TextLoadingProgressIndicator());
+                              return const SizedBox(height: 85,
+                                child: Center(
+                                    child: TextLoadingProgressIndicator()),
+                              );
                             } else {
                               if (snapshot.data!.bodyText != null) {
                                 return RawScrollbar(

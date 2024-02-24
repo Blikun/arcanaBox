@@ -37,6 +37,7 @@ dependencies:
   google_fonts:
   internet_connection_checker_plus:
   icon_decoration:
+  flutter_xlider:
   cupertino_icons: ^1.0.2
   dio: ^5.4.0
 

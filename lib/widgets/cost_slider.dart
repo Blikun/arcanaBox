@@ -8,13 +8,17 @@ class FilterSlider extends StatelessWidget {
   final Rx<List<int>> Function() getValue;
   final Function(List<int>) setValue;
   final double max;
+  final double min;
   final String label;
+  final bool range;
+  final Function onChanged;
 
   const FilterSlider({
     super.key,
     required this.getValue,
     required this.setValue,
-    required this.max, required this.label,
+    required this.range,
+    required this.max, required this.label, required this.min, required this.onChanged,
   });
 
   @override
@@ -22,12 +26,12 @@ class FilterSlider extends StatelessWidget {
     return Obx(() {
       var values = getValue().value;
       return FlutterSlider(
-        rangeSlider: true,
+        rangeSlider: range,
         handler: _costHandler(Icons.chevron_right, values[0].toString()),
         rightHandler: _costHandler(Icons.chevron_right, values[1].toString()),
         trackBar: FlutterSliderTrackBar(
           centralWidget: Padding(
-              padding: EdgeInsets.only(top: 50),
+              padding: const EdgeInsets.only(top: 50),
               child: Text(
                 label,
                 style: Constants.cabinStyle.copyWith(color: Constants.goldColor.withOpacity(0.8)),
@@ -44,10 +48,11 @@ class FilterSlider extends StatelessWidget {
             border: Border.all(width: 8, color: Constants.goldColor),
           ),
         ),
-        min: 1,
+        min: min,
         max: max,
-        onDragging: (handlerIndex, lower, upper) {
+        onDragCompleted: (handlerIndex, lower, upper){
           setValue([lower.toInt(), upper.toInt()]);
+          onChanged();
         },
         values: [values[0].toDouble(), values[1].toDouble()],
         tooltip: _tooltip(),
@@ -58,6 +63,7 @@ class FilterSlider extends StatelessWidget {
   _tooltip() {
     return FlutterSliderTooltip(
         format: (val) {
+          if (val == "0.0" ) return "-";
           return val.replaceAll(".0", "");
         },
         positionOffset: FlutterSliderTooltipPositionOffset(top: 20),
@@ -94,7 +100,7 @@ class FilterSlider extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(1),
             child: Text(
-              cost,
+              cost == "0" ? "-" : cost,
               style: Constants.cabinStyle
                   .copyWith(color: Colors.white.withOpacity(0.8)),
               textAlign: TextAlign.center,

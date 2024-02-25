@@ -14,7 +14,7 @@ class FilterController extends GetxController {
   final Rx<String?> bodyText = Rx<String?>(null);
   final Rx<int?> willpower = Rx<int?>(null);
   final Rx<int?> strength = Rx<int?>(null);
-  final Rx<List<int>> lore = Rx<List<int>>([1,5]);
+  final Rx<List<int>> lore = Rx<List<int>>([0,0]);
 
   // update values
   void updateType(String? newValue) {
@@ -136,7 +136,7 @@ class FilterController extends GetxController {
     bodyText.value = null;
     willpower.value = null;
     strength.value = null;
-    lore.value = [1,5];
+    lore.value = [0,0];
   }
 
   bool hasActiveFilters() {
@@ -144,7 +144,7 @@ class FilterController extends GetxController {
         name.value != null ||
         rarity.value != null ||
         inkable.value != null ||
-        cost.value != null ||
+        cost.value != [1,10] ||
         color.value != null ||
         cardNum.value != null ||
         setNum.value != null ||
@@ -153,6 +153,6 @@ class FilterController extends GetxController {
         bodyText.value != null ||
         willpower.value != null ||
         strength.value != null ||
-        lore.value != null;
+        lore.value != [0];
   }
 }

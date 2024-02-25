@@ -92,6 +92,12 @@ class LibraryController extends GetxController {
     commState.value = CommState.idle;
   }
 
+  void refreshLibrary() {
+    clearLibrary(paginateClear: true);
+    paginateLibrary();
+    update();
+  }
+
   void clearLibrary({bool paginateClear = false}) {
     library.clear();
     if (paginateClear) lastPageFetched.value = 0;

@@ -1,5 +1,5 @@
 import 'package:arcana_box/constants.dart';
-import 'package:arcana_box/controllers/FilterController.dart';
+import 'package:arcana_box/controllers/filter_controller.dart';
 import 'package:arcana_box/controllers/translation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:arcana_box/data/api_client/get_cards.dart';
@@ -22,7 +22,7 @@ class LibraryController extends GetxController {
     filterController.clearAllFilters();
     paginationListener();
     Future.delayed(const Duration(milliseconds: 250), () {
-      fetchPaginated(1);
+      searchPaginated(1);
     });
   }
 
@@ -40,28 +40,10 @@ class LibraryController extends GetxController {
   void paginateLibrary() {
     if (commState.value != CommState.idle) return;
     print("paginateLibrary");
-    filterController.hasActiveFilters()
-        ? searchFilterPaginated(lastPageFetched.value + 1)
-        : fetchPaginated(lastPageFetched.value + 1);
+    searchPaginated(lastPageFetched.value + 1);
   }
 
-  void fetchPaginated(int page) async {
-    if (commState.value != CommState.idle) return;
-    print("fetchPaginated: $page");
-    commState.value = CommState.loading;
-
-    List<LCard> fetchedCards = await GetCards().fetch(page);
-    for (LCard card in fetchedCards) {
-      if (!library.contains(card)) {
-        library.add(card);
-      }
-    }
-    lastPageFetched.value = page;
-    print("done");
-    commState.value = CommState.idle;
-  }
-
-  void searchFilterPaginated(int page) async {
+  void searchPaginated(int page) async {
     if (commState.value != CommState.idle) return;
     print("searchFilterPaginated: $page");
     commState.value = CommState.loading;
@@ -102,4 +84,5 @@ class LibraryController extends GetxController {
     library.clear();
     if (paginateClear) lastPageFetched.value = 0;
   }
+
 }

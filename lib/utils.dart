@@ -83,5 +83,26 @@ class Utils {
       default:
         return null; // Default image or an empty string if no match
     }
+
+  }
+  String formatCost(String cost) {
+    switch (cost) {
+      case "0":
+        return "0";
+      case "-1":
+        return "-";
+      default:
+        return cost;
+    }
+  }
+  AssetImage typeToImageAsset(int type) {
+    switch (type) {
+      case 1:
+        return const AssetImage(Constants.willpowerFrame);
+      case 2:
+        return const AssetImage(Constants.strengthFrame);
+      default:
+        return const AssetImage(Constants.loreFrame);
+    }
   }
 }

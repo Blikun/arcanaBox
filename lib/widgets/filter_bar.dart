@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import '../constants.dart';
 import '../controllers/library_controller.dart';
-import 'cost_slider.dart';
+import 'filter_slider.dart';
 import 'ink_icon.dart';
 
 final _height = 50.0.obs;
@@ -66,7 +66,7 @@ class FilterBar extends StatelessWidget {
                     onVerticalDragUpdate: (details) {
                       if (details.delta.dy < -10) {
                         _opened.value = true;
-                        _height.value = 220;
+                        _height.value = 285;
                       }
                       if (details.delta.dy > 10) {
                         _opened.value = false;
@@ -93,6 +93,7 @@ class FilterBar extends StatelessWidget {
                         children: [
                           IconButton(
                             onPressed: () {
+                              libraryController.filterController.clearAllFilters();
                               libraryController.refreshLibrary();
                             },
                             icon: Icon(
@@ -116,7 +117,7 @@ class FilterBar extends StatelessWidget {
                             onPressed: () {
                               _opened.value = !_opened.value;
                               _opened.isTrue
-                                  ? _height.value = 220
+                                  ? _height.value = 285
                                   : _height.value = 50;
                               libraryController.update();
                             },
@@ -165,21 +166,60 @@ class FilterBar extends StatelessWidget {
                     ),
                     Flexible(
                       child: FilterSlider(
+                        type: 3,
                         range: false,
                         label: "Lore",
-                        min: 0,
+                        min: -1,
                         max: 5,
                         getValue: () => libraryController.filterController.lore,
-                        setValue: (newValues) => libraryController
+                        setValue: (newValue) => libraryController
                             .filterController
-                            .updateLore(newValues),
+                            .updateLore(newValue[0]),
                         onChanged: ()=>libraryController.refreshLibrary(),
                       ),
                     ),
                   ],
                 ),
               ),
-            )
+            ),
+            Positioned(
+              top: 120,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  children: [
+                    Flexible(
+                      child: FilterSlider(
+                        type: 2,
+                        range: false,
+                        label: "Strength",
+                        min: -1,
+                        max: 15,
+                        getValue: () => libraryController.filterController.strength,
+                        setValue: (newValues) => libraryController
+                            .filterController
+                            .updateStrength(newValues[0]),
+                        onChanged: ()=>libraryController.refreshLibrary(),
+                      ),
+                    ),
+                    Flexible(
+                      child: FilterSlider(
+                        type: 1,
+                        range: false,
+                        label: "Will",
+                        min: -1,
+                        max: 15,
+                        getValue: () => libraryController.filterController.willpower,
+                        setValue: (newValue) => libraryController
+                            .filterController
+                            .updateWillpower(newValue[0]),
+                        onChanged: ()=>libraryController.refreshLibrary(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ],

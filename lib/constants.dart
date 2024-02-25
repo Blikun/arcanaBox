@@ -8,7 +8,11 @@ class Constants {
   static const String cadCanvas = "assets/canvas.png";
   static const String decorationFrame = "assets/decoration_frame.png";
 
-  static const String enchanted = "assets/icons/enchanted.png";
+  static const String enchanted = "assets/icons/enchantedIcon.png";
+
+  static const String willpowerFrame = "assets/willpower.png";
+  static const String strengthFrame = "assets/strength.png";
+  static const String loreFrame = "assets/lore.png";
 
   static const String inkSapphire = "assets/icons/ink_sapphire.png";
   static const String inkAmber = "assets/icons/ink_amber.png";

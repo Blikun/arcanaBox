@@ -37,7 +37,7 @@ class GetCards extends LorcanaApi {
     String? bodyText,
     int? willpower,
     int? strength,
-    List<int>? lore,
+    int? lore,
     int page,
   ) async {
     List<String> searchParams = [];
@@ -56,14 +56,14 @@ class GetCards extends LorcanaApi {
     if (abilities != null) searchParams.add("Abilities=$abilities");
     if (setName != null) searchParams.add("SetName=$setName");
     if (bodyText != null) searchParams.add("BodyText=$bodyText");
-    if (willpower != null) searchParams.add("Willpower=$willpower");
-    if (strength != null) searchParams.add("Strength=$strength");
-    if (lore != null && lore[0] != 0) {
-      searchParams.add("Lore=${lore[0]}");
-      //  searchParams.add("Lore<${lore[1]+1}");
+    if (willpower != null && willpower != -1) searchParams.add("Willpower=$willpower");
+    if (strength != null && strength != -1) searchParams.add("Strength=$strength");
+    if (lore != null && lore != -1) {
+      searchParams.add("Lore=$lore");
     }
 
     String searchQuery = searchParams.join(';');
+    print("'${super.cardsFetch}?page=$page&pagesize=${super.pageSize}&search=$searchQuery'");
     final response = await dio.get(
         '${super.cardsFetch}?page=$page&pagesize=${super.pageSize}&search=$searchQuery');
 

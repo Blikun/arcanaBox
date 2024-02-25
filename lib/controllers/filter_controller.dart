@@ -12,9 +12,9 @@ class FilterController extends GetxController {
   final Rx<String?> abilities = Rx<String?>(null);
   final Rx<String?> setName = Rx<String?>(null);
   final Rx<String?> bodyText = Rx<String?>(null);
-  final Rx<int?> willpower = Rx<int?>(null);
-  final Rx<int?> strength = Rx<int?>(null);
-  final Rx<List<int>> lore = Rx<List<int>>([0,0]);
+  final Rx<int> willpower = Rx<int>(-1);
+  final Rx<int> strength = Rx<int>(-1);
+  final Rx<int> lore = Rx<int>(-1);
 
   // update values
   void updateType(String? newValue) {
@@ -102,26 +102,29 @@ class FilterController extends GetxController {
   }
 
   void updateWillpower(int? newValue) {
-    if (willpower.value == newValue) {
-      willpower.value = null;
+    if (willpower.isNaN) {
+      willpower.value = -1;
     } else {
-      willpower.value = newValue;
+      willpower.value = newValue!;
     }
   }
 
   void updateStrength(int? newValue) {
-    if (strength.value == newValue) {
-      strength.value = null;
+    if (strength.isNaN) {
+      strength.value = -1;
     } else {
-      strength.value = newValue;
+      strength.value = newValue!;
     }
   }
 
-  void updateLore(List<int> newValue) {
-      lore.value = newValue;
+  void updateLore(int? newValue) {
+    if (lore.isNaN) {
+      lore.value = -1;
+    } else {
+      lore.value = newValue!;
+    }
   }
 
-  // clear
   void clearAllFilters() {
     type.value = null;
     name.value = null;
@@ -134,9 +137,9 @@ class FilterController extends GetxController {
     abilities.value = null;
     setName.value = null;
     bodyText.value = null;
-    willpower.value = null;
-    strength.value = null;
-    lore.value = [0,0];
+    willpower.value = -1;
+    strength.value = -1;
+    lore.value = -1;
   }
 
   bool hasActiveFilters() {
@@ -151,8 +154,8 @@ class FilterController extends GetxController {
         abilities.value != null ||
         setName.value != null ||
         bodyText.value != null ||
-        willpower.value != null ||
-        strength.value != null ||
-        lore.value != [0];
+        willpower.value != -1 ||
+        strength.value != -1 ||
+        lore.value != -1;
   }
 }

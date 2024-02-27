@@ -42,7 +42,7 @@ class GetCards extends LorcanaApi {
   ) async {
     List<String> searchParams = [];
 
-    if (type != null) searchParams.add("Type=$type");
+    if (type != null && type != "Any") searchParams.add("Type=$type");
     if (name != null) searchParams.add("Name=$name");
     if (rarity != null) searchParams.add("Rarity=$rarity");
     if (inkable != null) searchParams.add("Inkable=$inkable");
@@ -52,7 +52,7 @@ class GetCards extends LorcanaApi {
     }
     if (color != null) searchParams.add("Color=$color");
     if (cardNum != null) searchParams.add("CardNum=$cardNum");
-    if (setNum != null) searchParams.add("SetNum=$setNum");
+    if (setNum != null && setNum != 0) searchParams.add("Set_Num=$setNum");
     if (abilities != null) searchParams.add("Abilities=$abilities");
     if (setName != null) searchParams.add("SetName=$setName");
     if (bodyText != null) searchParams.add("BodyText=$bodyText");

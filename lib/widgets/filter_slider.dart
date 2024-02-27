@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_xlider/flutter_xlider.dart';
 import 'package:get/get.dart';
+import 'dart:io';
 
 import '../constants.dart';
 import '../utils.dart';
@@ -11,7 +12,7 @@ class FilterSlider extends StatelessWidget {
   final double max;
   final double min;
   final String label;
-  final bool range;
+  final bool isRange;
   final Function onChanged;
   final int? type;
 
@@ -19,7 +20,7 @@ class FilterSlider extends StatelessWidget {
     super.key,
     required this.getValue,
     required this.setValue,
-    required this.range,
+    required this.isRange,
     required this.max,
     required this.label,
     required this.min,
@@ -32,19 +33,9 @@ class FilterSlider extends StatelessWidget {
     return Obx(() {
       var value = getValue().value;
       return FlutterSlider(
-        rangeSlider: range,
-        handler: range
-            ? type != null
-                ? _sliderThemedHandler(value[0].toString(), 1)
-                : _sliderHandler(value[0].toString())
-            : type != null
-                ? _sliderThemedHandler(value.toString(), type!)
-                : _sliderHandler(value.toString()),
-        rightHandler: range
-            ? type != null
-                ? _sliderThemedHandler(value[1].toString(), 1)
-                : _sliderHandler(value[1].toString())
-            : null,
+        rangeSlider: isRange,
+        handler: _determineHandler(value),
+        rightHandler: _determineHandler(value, isRightHandler: true),
         trackBar: FlutterSliderTrackBar(
           centralWidget: Padding(
               padding: const EdgeInsets.only(top: 40),
@@ -55,27 +46,28 @@ class FilterSlider extends StatelessWidget {
               )),
           inactiveTrackBar: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: Colors.black12,
+            color: Utils().sliderNativeColorFix(),
             border: Border.all(
                 width: 8, color: Constants.goldColor.withOpacity(0.4)),
           ),
           activeTrackBar: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: Colors.black12,
-            border: Border.all(width: 8, color: Constants.goldColor),
+            color: Utils().sliderNativeColorFix(),
+            border: Border.all(
+                width: Platform.isAndroid ? 1 : 8, color: Constants.goldColor),
           ),
         ),
         min: min,
         max: max,
         onDragCompleted: (handlerIndex, lower, upper) {
-          if (range) {
+          if (isRange) {
             setValue([lower.toInt(), upper.toInt()]);
           } else {
             setValue([lower.toInt()]);
           }
           onChanged();
         },
-        values: range == true
+        values: isRange == true
             ? [value[0].toDouble(), value[1].toDouble()]
             : [value.toDouble()],
         tooltip: _tooltip(),
@@ -83,13 +75,10 @@ class FilterSlider extends StatelessWidget {
     });
   }
 
+  // Tooltip
   _tooltip() {
     return FlutterSliderTooltip(
-        format: (val) {
-          if (val == "-1.0") return "?";
-          if (val == "0.0") return "0";
-          return val.replaceAll(".0", "");
-        },
+        format: (val) => Utils().handlerTooltipFormat(val),
         positionOffset: FlutterSliderTooltipPositionOffset(top: 20),
         textStyle:
             Constants.cabinStyle.copyWith(color: Colors.white.withOpacity(0.8)),
@@ -101,6 +90,29 @@ class FilterSlider extends StatelessWidget {
         )));
   }
 
+  // Helper method to determine the appropriate sliderHandler
+  FlutterSliderHandler _determineHandler(dynamic value,
+      {bool isRightHandler = false}) {
+
+    bool isRangeAndRight = isRange && isRightHandler;
+    String handlerValue = "";
+
+    if (isRange) {
+      handlerValue =
+          isRangeAndRight ? value[1].toString() : value[0].toString();
+    }
+    if (!isRange) {
+      handlerValue = value.toString();
+    }
+
+    bool useThemedHandler = type != null && isRange;
+
+    return useThemedHandler
+        ? _sliderThemedHandler(handlerValue, isRightHandler ? 1 : type!)
+        : _sliderHandler(handlerValue);
+  }
+
+  // plain rounded handler widget
   _sliderHandler(String cost) {
     return FlutterSliderHandler(
       decoration: const BoxDecoration(),
@@ -124,7 +136,7 @@ class FilterSlider extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(1),
             child: Text(
-              Utils().formatCost(cost),
+              Utils().handlerCostFormat(cost),
               style: Constants.cabinStyle
                   .copyWith(color: Colors.white.withOpacity(0.8)),
               textAlign: TextAlign.center,
@@ -135,7 +147,31 @@ class FilterSlider extends StatelessWidget {
     );
   }
 
+  // themed handler widget based on card's attribute type
   _sliderThemedHandler(String cost, int type) {
+    // todo: this is a bad patch for fine fitting the icons, todo -> fix the icons img
+    final double? fontSize = cost == "-1" ? 13.5 : null;
+    final double? height = cost == "-1" ? 1.6 : null;
+    final EdgeInsets margin;
+    final EdgeInsets padding;
+    switch (type) {
+      case 1:
+        margin = const EdgeInsets.all(2);
+        break;
+      default:
+        margin = EdgeInsets.zero;
+    }
+    switch (type) {
+      case 1:
+        padding = const EdgeInsets.only(top: 5);
+        break;
+      case 2:
+        padding = const EdgeInsets.only(top: 6);
+        break;
+      default:
+        padding = const EdgeInsets.only(top: 10);
+    }
+
     return FlutterSliderHandler(
       decoration: const BoxDecoration(),
       child: Container(
@@ -150,29 +186,21 @@ class FilterSlider extends StatelessWidget {
           ],
         ),
         child: Container(
-          margin: EdgeInsets.all(type == 1
-              ? 2
-              : type == 2
-                  ? 0
-                  : 0),
+          margin: margin,
           width: 40,
           height: 35,
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: Utils().typeToImageAsset(type), fit: BoxFit.contain)),
+                  image: Utils().attributeTypeImage(type),
+                  fit: BoxFit.contain)),
           child: Padding(
-            padding: EdgeInsets.only(
-                top: type == 1
-                    ? 5
-                    : type == 2
-                        ? 6
-                        : 10),
+            padding: padding,
             child: Text(
               cost == "-1" ? "?" : cost,
               style: Constants.cabinStyle.copyWith(
                   color: Colors.white.withOpacity(0.8),
-                  fontSize: cost == "-1" ? 13.5 : null,
-                  height: cost == "-1" ? 1.6 : null),
+                  fontSize: fontSize,
+                  height: height),
               textAlign: TextAlign.center,
             ),
           ),

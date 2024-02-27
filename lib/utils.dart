@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 
 import 'constants.dart';
 
@@ -85,7 +86,14 @@ class Utils {
     }
 
   }
-  String formatCost(String cost) {
+
+  Color sliderNativeColorFix() {
+    return Platform.isAndroid
+        ? Constants.goldColor.withOpacity(0.25)
+        : Colors.black12;
+  }
+
+  String handlerCostFormat(String cost) {
     switch (cost) {
       case "0":
         return "0";
@@ -95,7 +103,15 @@ class Utils {
         return cost;
     }
   }
-  AssetImage typeToImageAsset(int type) {
+
+  String handlerTooltipFormat(String val) {
+    if (val == "-1.0") return "?";
+    if (val == "0.0") return "0";
+    return val.replaceAll(".0", "");
+  }
+
+
+  AssetImage attributeTypeImage(int type) {
     switch (type) {
       case 1:
         return const AssetImage(Constants.willpowerFrame);

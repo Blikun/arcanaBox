@@ -1,14 +1,14 @@
 import 'package:get/get.dart';
 
 class FilterController extends GetxController {
-  final Rx<String?> type = Rx<String?>(null);
+  final Rx<String?> type = Rx<String?>("Any");
   final Rx<String?> name = Rx<String?>(null);
   final Rx<String?> rarity = Rx<String?>(null);
   final Rx<String?> inkable = Rx<String?>(null);
   final Rx<List<int>> cost = Rx<List<int>>([1,10]);
   final Rx<String?> color = Rx<String?>(null);
   final Rx<int?> cardNum = Rx<int?>(null);
-  final Rx<int?> setNum = Rx<int?>(null);
+  final Rx<int?> setNum = Rx<int?>(0);
   final Rx<String?> abilities = Rx<String?>(null);
   final Rx<String?> setName = Rx<String?>(null);
   final Rx<String?> bodyText = Rx<String?>(null);
@@ -16,10 +16,10 @@ class FilterController extends GetxController {
   final Rx<int> strength = Rx<int>(-1);
   final Rx<int> lore = Rx<int>(-1);
 
-  // update values
+
   void updateType(String? newValue) {
-    if (type.value == newValue) {
-      type.value = null;
+    if (type.value == null) {
+      type.value = "Any";
     } else {
       type.value = newValue;
     }
@@ -70,8 +70,8 @@ class FilterController extends GetxController {
   }
 
   void updateSetNum(int? newValue) {
-    if (setNum.value == newValue) {
-      setNum.value = null;
+    if (setNum.value == null) {
+      setNum.value = 0;
     } else {
       setNum.value = newValue;
     }
@@ -126,14 +126,14 @@ class FilterController extends GetxController {
   }
 
   void clearAllFilters() {
-    type.value = null;
+    type.value = "Any";
     name.value = null;
     rarity.value = null;
     inkable.value = null;
     cost.value = [1,10];
     color.value = null;
     cardNum.value = null;
-    setNum.value = null;
+    setNum.value = 0;
     abilities.value = null;
     setName.value = null;
     bodyText.value = null;
@@ -143,14 +143,14 @@ class FilterController extends GetxController {
   }
 
   bool hasActiveFilters() {
-    return type.value != null ||
+    return type.value != "Any" ||
         name.value != null ||
         rarity.value != null ||
         inkable.value != null ||
         cost.value != [1,10] ||
         color.value != null ||
         cardNum.value != null ||
-        setNum.value != null ||
+        setNum.value != 0 ||
         abilities.value != null ||
         setName.value != null ||
         bodyText.value != null ||

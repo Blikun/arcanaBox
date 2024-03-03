@@ -50,6 +50,9 @@ class DropdownSelector<T> extends StatelessWidget {
                 } else {
                   displayValue = value.toString();
                 }
+                if (value is String && value == "Action - Song") {
+                  displayValue = 'Song';
+                }
                 return DropdownMenuItem<T>(
                   value: value,
                   child: Padding(

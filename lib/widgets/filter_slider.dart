@@ -105,7 +105,7 @@ class FilterSlider extends StatelessWidget {
       handlerValue = value.toString();
     }
 
-    bool useThemedHandler = type != null && isRange;
+    bool useThemedHandler = type != null && !isRange;
 
     return useThemedHandler
         ? _sliderThemedHandler(handlerValue, isRightHandler ? 1 : type!)

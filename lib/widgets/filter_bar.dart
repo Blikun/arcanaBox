@@ -289,7 +289,7 @@ class FilterBar extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.only(right: 5.0),
                               child: DropdownSelector(
-                                items: const ["Any", "Character", "Action", "Song", "Item", "Location"],
+                                items: const ["Any", "Character", "Action", "Action - Song", "Item", "Location"],
                                 selectedValue: libraryController
                                     .filterController.type,
                                 onChanged: (String? value) {

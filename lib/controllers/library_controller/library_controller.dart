@@ -3,11 +3,11 @@ import 'dart:developer';
 import 'package:arcana_box/constants.dart';
 import 'package:arcana_box/controllers/filter_controller/filter_controller.dart';
 import 'package:arcana_box/controllers/translation_controller/translation_controller.dart';
-import 'package:arcana_box/data/api_client/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 
+import '../../data/api/api_client.dart';
 import '../../models/card.dart';
 
 part 'library_state.dart';

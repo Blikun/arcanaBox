@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'controllers/translation_controller/translation_controller.dart';
-import 'data/api_client/api_client.dart';
+import 'data/api/api_client.dart';
 
 void main() {
   initializeDependencies();

@@ -27,7 +27,11 @@ FilterController(this.state);
   }
 
   void updateColor(String? newValue) {
-    state.filters.value = state.filters.value.copyWith(color: newValue);
+    bool remove = state.filters.value.color == newValue;
+    state.filters.value = state.filters.value.copyWith(
+      color: newValue,
+      needClearColor: remove,
+    );
   }
 
   void updateCardNum(int? newValue) {

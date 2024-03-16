@@ -1,4 +1,3 @@
-
 class FiltersModel {
   String? type;
   String? name;
@@ -39,6 +38,7 @@ class FiltersModel {
     String? inkable,
     List<int>? cost,
     String? color,
+    bool needClearColor = false,
     int? cardNum,
     int? setNum,
     String? abilities,
@@ -54,7 +54,7 @@ class FiltersModel {
       rarity: rarity ?? this.rarity,
       inkable: inkable ?? this.inkable,
       cost: cost ?? this.cost,
-      color: color ?? this.color,
+      color: needClearColor ? null : color ?? this.color,
       cardNum: cardNum ?? this.cardNum,
       setNum: setNum ?? this.setNum,
       abilities: abilities ?? this.abilities,

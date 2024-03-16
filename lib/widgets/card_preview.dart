@@ -30,11 +30,7 @@ class CardPreview extends StatelessWidget {
                 children: [
                   Image(
                     image: imageProvider,
-                  ).animate(effects: [
-                    const FlipEffect(
-                        direction: Axis.horizontal,
-                        curve: Curves.fastEaseInToSlowEaseOut)
-                  ]),
+                  ),
                   if (enchantedMark)
                     Positioned(
                         bottom: 0,

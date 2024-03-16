@@ -3,7 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 
 import '../constants.dart';
-import '../controllers/library_controller.dart';
+import '../controllers/library_controller/library_controller.dart';
 import 'card_details_dialog.dart';
 import 'card_preview.dart';
 
@@ -25,7 +25,7 @@ class CardGrid extends StatelessWidget {
               child: GridView.builder(
                 controller: libraryController.scrollController,
                 padding: const EdgeInsets.all(5),
-                itemCount: libraryController.library.length,
+                itemCount: libraryController.state.library.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   childAspectRatio: Constants.cardAspectRatio,
                   mainAxisSpacing: 5,
@@ -36,17 +36,17 @@ class CardGrid extends StatelessWidget {
                   return Animate(
                     effects: const [FadeEffect()],
                     child: CardPreview(
-                      image: libraryController.library[index].image!,
+                      image: libraryController.state.library[index].image!,
                       enchantedMark:
-                          (libraryController.library[index].enchantedImage !=
+                          (libraryController.state.library[index].enchantedImage !=
                                   "" &&
-                              libraryController.library[index].enchantedImage !=
+                              libraryController.state.library[index].enchantedImage !=
                                   null),
                       onTap: () {
                         Get.dialog(CardDetailsDialog(
-                          card: libraryController.library[index],
+                          card: libraryController.state.library[index],
                           translationService:
-                              libraryController.translationService,
+                              libraryController.translationController,
                         ));
                       },
                     ),

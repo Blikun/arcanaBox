@@ -1,4 +1,4 @@
-import 'package:arcana_box/controllers/library_controller.dart';
+import 'package:arcana_box/controllers/library_controller/library_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
@@ -8,7 +8,7 @@ import '../widgets/card_grid.dart';
 import '../widgets/filter_bar.dart';
 
 class LibraryScreen extends StatelessWidget {
-  final libraryController = Get.put(LibraryController());
+  final libraryController = Get.find<LibraryController>();
 
   LibraryScreen({super.key});
 
@@ -27,13 +27,13 @@ class LibraryScreen extends StatelessWidget {
             Obx(() {
               return Stack(children: [
                 FilterBar(),
-                if (libraryController.commState.value == CommState.loading)
+                if (libraryController.state.commState.value == CommState.loading)
                   LinearProgressIndicator(
-                    color: libraryController.filterController.color.value !=
+                    color: libraryController.filterController.state.filters.value.color !=
                         null
                         ? Constants.inkColors.firstWhere((element) =>
                     element['name'] ==
-                        libraryController.filterController.color.value)['color']
+                        libraryController.filterController.state.filters.value.color)['color']
                         : Constants.goldColor,
                     backgroundColor: Colors.transparent,
                     minHeight: 3,

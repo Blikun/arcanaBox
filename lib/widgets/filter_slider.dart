@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_xlider/flutter_xlider.dart';
-import 'package:get/get.dart';
 import 'dart:io';
 
 import '../constants.dart';
 import '../utils.dart';
 
 class FilterSlider extends StatelessWidget {
-  final Function() getValue;
+  final dynamic value;
   final Function(List<int>) setValue;
   final double max;
   final double min;
@@ -18,7 +17,7 @@ class FilterSlider extends StatelessWidget {
 
   const FilterSlider({
     super.key,
-    required this.getValue,
+    required this.value,
     required this.setValue,
     required this.isRange,
     required this.max,
@@ -30,9 +29,8 @@ class FilterSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      var value = getValue().value;
-      return FlutterSlider(
+    return
+       FlutterSlider(
         rangeSlider: isRange,
         handler: _determineHandler(value),
         rightHandler: _determineHandler(value, isRightHandler: true),
@@ -72,7 +70,7 @@ class FilterSlider extends StatelessWidget {
             : [value.toDouble()],
         tooltip: _tooltip(),
       );
-    });
+
   }
 
   // Tooltip

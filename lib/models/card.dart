@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-import '../../utils.dart';
+import '../utils.dart';
 
 
-List<LCard> cardFromJson(String str) => List<LCard>.from(json.decode(str).map((x) => LCard.fromJson(x)));
+List<CardModel> cardFromJson(String str) => List<CardModel>.from(json.decode(str).map((x) => CardModel.fromJson(x)));
 
-String cardToJson(List<LCard> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String cardToJson(List<CardModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class LCard {
+class CardModel {
   final String? artist;
   final String? setName;
   final String? classifications;
@@ -31,7 +31,7 @@ class LCard {
   final String? flavorText;
   CardTranslations? cardTranslations;
 
-  LCard({
+  CardModel({
     this.artist,
     this.setName,
     this.classifications,
@@ -57,7 +57,7 @@ class LCard {
   }) : enchantedImage = Utils().getEnchantedImage(int.parse("$cardNum$setNum")) ?? enchantedImage; // Use function to determine enchantedImage
 
 
-  LCard copyWith({
+  CardModel copyWith({
     String? artist,
     String? setName,
     String? classifications,
@@ -81,7 +81,7 @@ class LCard {
     String? flavorText,
     CardTranslations? cardTranslations,
   }) =>
-      LCard(
+      CardModel(
         artist: artist ?? this.artist,
         setName: setName ?? this.setName,
         classifications: classifications ?? this.classifications,
@@ -107,7 +107,7 @@ class LCard {
       );
 
 
-  factory LCard.fromJson(Map<String, dynamic> json) => LCard(
+  factory CardModel.fromJson(Map<String, dynamic> json) => CardModel(
     artist: json["Artist"],
     setName: json["Set_Name"],
     classifications: json["Classifications"],

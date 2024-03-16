@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 import '../constants.dart';
 
@@ -13,7 +11,7 @@ class DropdownSelector<T> extends StatelessWidget {
   });
 
   final List<T> items;
-  final Rx<T?> selectedValue;
+  final dynamic selectedValue;
   final void Function(T?) onChanged;
 
   @override
@@ -28,12 +26,11 @@ class DropdownSelector<T> extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Obx(() {
-        return Padding(
+      child: Padding(
           padding: const EdgeInsets.only(right: 5),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<T>(
-              value: selectedValue.value,
+              value: selectedValue,
               icon: const Icon(Icons.arrow_downward),
               iconSize: 24,
               elevation: 16,
@@ -67,8 +64,8 @@ class DropdownSelector<T> extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
           ),
-        );
-      }),
+        ),
+
     );
   }
 }

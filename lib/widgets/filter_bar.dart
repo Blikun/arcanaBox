@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '../constants.dart';
-import '../controllers/library_controller.dart';
+import '../controllers/library_controller/library_controller.dart';
 import 'dropdown_selector.dart';
 import 'filter_slider.dart';
 import 'ink_icon.dart';
@@ -23,8 +21,8 @@ class FilterBar extends StatelessWidget {
     return InkIcon(
       ink: inkData['ink'],
       color: inkData['color'],
-      selected:
-      libraryController.filterController.color.value == inkData['name'],
+      selected: libraryController.filterController.state.filters.value.color ==
+          inkData['name'],
       onTap: () {
         libraryController.filterController.updateColor(inkData['name']);
         libraryController.refreshLibrary();
@@ -39,7 +37,7 @@ class FilterBar extends StatelessWidget {
         Container(
           height: 3,
           decoration:
-          BoxDecoration(color: Constants.goldColor.withOpacity(0.3)),
+              BoxDecoration(color: Constants.goldColor.withOpacity(0.3)),
         ),
         Stack(
           alignment: Alignment.center,
@@ -106,7 +104,7 @@ class FilterBar extends StatelessWidget {
                               size: 25,
                             ),
                             highlightColor:
-                            Constants.goldColor.withOpacity(0.05),
+                                Constants.goldColor.withOpacity(0.05),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 6),
@@ -133,7 +131,7 @@ class FilterBar extends StatelessWidget {
                               size: 30,
                             ),
                             highlightColor:
-                            Constants.goldColor.withOpacity(0.05),
+                                Constants.goldColor.withOpacity(0.05),
                           ),
                         ],
                       ),
@@ -166,10 +164,7 @@ class FilterBar extends StatelessWidget {
             Positioned(
               top: 70,
               child: SizedBox(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width,
+                width: MediaQuery.of(context).size.width,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
@@ -180,12 +175,11 @@ class FilterBar extends StatelessWidget {
                           label: "Cost",
                           min: 1,
                           max: 10,
-                          getValue: () =>
-                          libraryController.filterController.cost,
-                          setValue: (newValues) =>
-                              libraryController
-                                  .filterController
-                                  .updateCost(newValues),
+                          value: libraryController
+                              .filterController.state.filters.value.cost,
+                          setValue: (newValues) => libraryController
+                              .filterController
+                              .updateCost(newValues),
                           onChanged: () => libraryController.refreshLibrary(),
                         ),
                       ),
@@ -196,12 +190,11 @@ class FilterBar extends StatelessWidget {
                           label: "Lore",
                           min: -1,
                           max: 5,
-                          getValue: () =>
-                          libraryController.filterController.lore,
-                          setValue: (newValue) =>
-                              libraryController
-                                  .filterController
-                                  .updateLore(newValue[0]),
+                          value: libraryController
+                              .filterController.state.filters.value.lore,
+                          setValue: (newValue) => libraryController
+                              .filterController
+                              .updateLore(newValue[0]),
                           onChanged: () => libraryController.refreshLibrary(),
                         ),
                       ),
@@ -213,10 +206,7 @@ class FilterBar extends StatelessWidget {
             Positioned(
               top: 130,
               child: SizedBox(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width,
+                width: MediaQuery.of(context).size.width,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
@@ -228,12 +218,11 @@ class FilterBar extends StatelessWidget {
                           label: "Strength",
                           min: -1,
                           max: 15,
-                          getValue: () =>
-                          libraryController.filterController.strength,
-                          setValue: (newValues) =>
-                              libraryController
-                                  .filterController
-                                  .updateStrength(newValues[0]),
+                          value: libraryController
+                              .filterController.state.filters.value.strength,
+                          setValue: (newValues) => libraryController
+                              .filterController
+                              .updateStrength(newValues[0]),
                           onChanged: () => libraryController.refreshLibrary(),
                         ),
                       ),
@@ -244,12 +233,11 @@ class FilterBar extends StatelessWidget {
                           label: "Will",
                           min: -1,
                           max: 15,
-                          getValue: () =>
-                          libraryController.filterController.willpower,
-                          setValue: (newValue) =>
-                              libraryController
-                                  .filterController
-                                  .updateWillpower(newValue[0]),
+                          value: libraryController
+                              .filterController.state.filters.value.willpower,
+                          setValue: (newValue) => libraryController
+                              .filterController
+                              .updateWillpower(newValue[0]),
                           onChanged: () => libraryController.refreshLibrary(),
                         ),
                       ),
@@ -261,10 +249,7 @@ class FilterBar extends StatelessWidget {
             Positioned(
               top: 215,
               child: SizedBox(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width,
+                width: MediaQuery.of(context).size.width,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
@@ -278,8 +263,7 @@ class FilterBar extends StatelessWidget {
                             child: Text(
                               'Type', // Your label text
                               style: Constants.cabinStyle.copyWith(
-                                  color: Constants.goldColor.withOpacity(
-                                      0.75),
+                                  color: Constants.goldColor.withOpacity(0.75),
                                   fontSize: 17,
                                   height: -0.1),
                             ),
@@ -289,9 +273,16 @@ class FilterBar extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.only(right: 5.0),
                               child: DropdownSelector(
-                                items: const ["Any", "Character", "Action", "Action - Song", "Item", "Location"],
+                                items: const [
+                                  "Any",
+                                  "Character",
+                                  "Action",
+                                  "Action - Song",
+                                  "Item",
+                                  "Location"
+                                ],
                                 selectedValue: libraryController
-                                    .filterController.type,
+                                    .filterController.state.filters.value.type,
                                 onChanged: (String? value) {
                                   libraryController.filterController
                                       .updateType(value);
@@ -310,8 +301,7 @@ class FilterBar extends StatelessWidget {
                             child: Text(
                               'Set Num', // Your label text
                               style: Constants.cabinStyle.copyWith(
-                                  color: Constants.goldColor.withOpacity(
-                                      0.75),
+                                  color: Constants.goldColor.withOpacity(0.75),
                                   fontSize: 17,
                                   height: -0.1),
                             ),
@@ -319,16 +309,21 @@ class FilterBar extends StatelessWidget {
                           SizedBox(
                             width: 85,
                             child: Padding(
-                              padding: const EdgeInsets.only(right: 5.0),
-                              child: DropdownSelector<int>(
-                                items: const [0, 1, 2, 3, 4],
-                                selectedValue: libraryController.filterController.setNum, // Assuming setNum is of type Rx<int?>
-                                onChanged: (int? value) {
-                                  libraryController.filterController.updateSetNum(value); // Assuming updateSetNum is a method that accepts int?
-                                  libraryController.refreshLibrary();
-                                },
-                              )
-                            ),
+                                padding: const EdgeInsets.only(right: 5.0),
+                                child: DropdownSelector<int>(
+                                  items: const [0, 1, 2, 3, 4],
+                                  selectedValue: libraryController
+                                      .filterController
+                                      .state
+                                      .filters
+                                      .value
+                                      .setNum,
+                                  onChanged: (int? value) {
+                                    libraryController.filterController
+                                        .updateSetNum(value);
+                                    libraryController.refreshLibrary();
+                                  },
+                                )),
                           ),
                         ],
                       ),

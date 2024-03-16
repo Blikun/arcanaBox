@@ -1,25 +1,15 @@
+import 'package:arcana_box/models/filters.dart';
 
-import '../models/card.dart';
+import '../../models/card.dart';
+import 'api_lorcana.dart';
 
-abstract class ApiClient {
-  Future<List<LCard>> all();
+class ApiClient extends LorcanaApi {
 
-  Future<List<LCard>> fetch(int page);
-
-  Future<List<LCard>> searchFilterCard(
-      String? type,
-      String? name,
-      String? rarity,
-      String? inkable,
-      List<int>? cost,
-      String? color,
-      int? cardNum,
-      int? setNum,
-      String? abilities,
-      String? setName,
-      String? bodyText,
-      int? willpower,
-      int? strength,
-      int? lore,
-      int page,);
+  Future<List<CardModel>> searchPaginated(
+      FiltersModel filters,
+      int page,
+  ) {
+    return super.searchFilterCard(
+   filters, page);
+  }
 }

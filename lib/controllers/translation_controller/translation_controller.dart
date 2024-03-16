@@ -1,20 +1,21 @@
 import 'package:get/get.dart';
 import 'package:translator/translator.dart';
 
-import '../data/models/card.dart';
+import '../../models/card.dart';
+part 'translation_state.dart';
 
-class TranslationService {
-  final language = "es".obs;
-  static const baseLanguage = "en";
-  final translator = GoogleTranslator();
+class TranslationController {
+  final TranslationState state;
+  TranslationController(this.state);
+
 
   Future<CardTranslations> getTranslate(String? text) async {
     if (text != null) {
       try {
-        var translation = await translator.translate(
+        var translation = await state.translator.translate(
             prepareForTranslate(text),
-            from: baseLanguage,
-            to: language.value);
+            from: state.baseLanguage,
+            to: state.language.value);
         return CardTranslations(bodyText: translation.toString());
       } catch (e) {
         //todo: rework
@@ -28,7 +29,7 @@ class TranslationService {
   String prepareForTranslate(String text) {
     String preparedText = text
         .replaceAll("{s}", "Strength value")
-        .replaceAll("{l}", "'Lore'")
+        .replaceAll("{l}", "Lore")
         .replaceAll("{e}", "be turned sideways")
         .replaceAll("{i}", "ink")
         .replaceAll("on top of", "placed over")
@@ -44,7 +45,7 @@ class TranslationService {
         .replaceAll("item", "object")
         .replaceAll("gain", "obtain")
         .replaceAll("chosen", "the chosen")
-        .replaceAll("if able", "if its possible")
+        .replaceAll("if able", "if possible")
         .replaceAll("facedown", "faced downwards")
         .replaceAll("instead", "instead of that");
 

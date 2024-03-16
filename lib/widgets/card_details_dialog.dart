@@ -4,13 +4,13 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:icon_decoration/icon_decoration.dart';
 import '../constants.dart';
-import '../controllers/translation_service.dart';
-import '../data/models/card.dart';
+import '../controllers/translation_controller/translation_controller.dart';
+import '../models/card.dart';
 import 'dart:math' as math;
 
 class CardDetailsDialog extends StatelessWidget {
-  final LCard card;
-  final TranslationService? translationService;
+  final CardModel card;
+  final TranslationController? translationService;
 
   CardDetailsDialog({super.key, required this.card, this.translationService});
 

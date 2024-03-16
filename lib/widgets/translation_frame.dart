@@ -5,8 +5,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import '../constants.dart';
-import '../controllers/translation_service.dart';
-import '../data/models/card.dart';
+import '../controllers/translation_controller/translation_controller.dart';
+import '../models/card.dart';
 import '../utils.dart';
 
 class TranslationFrame extends StatelessWidget {
@@ -16,8 +16,8 @@ class TranslationFrame extends StatelessWidget {
     required this.card,
   });
 
-  final TranslationService translationService;
-  final LCard card;
+  final TranslationController translationService;
+  final CardModel card;
 
   @override
   Widget build(BuildContext context) {

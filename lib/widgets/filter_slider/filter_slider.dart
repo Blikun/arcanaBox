@@ -1,9 +1,11 @@
+import 'package:arcana_box/widgets/filter_slider/slider_plain_handler.dart';
+import 'package:arcana_box/widgets/filter_slider/slider_themed_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_xlider/flutter_xlider.dart';
 import 'dart:io';
 
-import '../constants.dart';
-import '../utils.dart';
+import '../../constants.dart';
+import '../../utils.dart';
 
 class FilterSlider extends StatelessWidget {
   final dynamic value;
@@ -106,104 +108,7 @@ class FilterSlider extends StatelessWidget {
     bool useThemedHandler = type != null && !isRange;
 
     return useThemedHandler
-        ? _sliderThemedHandler(handlerValue, isRightHandler ? 1 : type!)
-        : _sliderHandler(handlerValue);
-  }
-
-  // plain rounded handler widget
-  _sliderHandler(String cost) {
-    return FlutterSliderHandler(
-      decoration: const BoxDecoration(),
-      child: Container(
-        decoration: const BoxDecoration(
-          color: Constants.goldColor,
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black,
-                spreadRadius: 3,
-                blurRadius: 10,
-                offset: Offset(0, 1))
-          ],
-        ),
-        child: Container(
-          margin: const EdgeInsets.all(2),
-          width: 20,
-          decoration: const BoxDecoration(
-              color: Constants.darkBlue, shape: BoxShape.circle),
-          child: Padding(
-            padding: const EdgeInsets.all(1),
-            child: Text(
-              Utils().handlerCostFormat(cost),
-              style: Constants.cabinStyle
-                  .copyWith(color: Colors.white.withOpacity(0.8)),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // themed handler widget based on card's attribute type
-  _sliderThemedHandler(String cost, int type) {
-    // todo: this is a bad patch for fine fitting the icons, todo -> fix the icons img
-    final double? fontSize = cost == "-1" ? 13.5 : null;
-    final double? height = cost == "-1" ? 1.6 : null;
-    final EdgeInsets margin;
-    final EdgeInsets padding;
-    switch (type) {
-      case 1:
-        margin = const EdgeInsets.all(2);
-        break;
-      default:
-        margin = EdgeInsets.zero;
-    }
-    switch (type) {
-      case 1:
-        padding = const EdgeInsets.only(top: 5);
-        break;
-      case 2:
-        padding = const EdgeInsets.only(top: 6);
-        break;
-      default:
-        padding = const EdgeInsets.only(top: 10);
-    }
-
-    return FlutterSliderHandler(
-      decoration: const BoxDecoration(),
-      child: Container(
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black54,
-                spreadRadius: 0.05,
-                blurRadius: 5,
-                offset: Offset(0, 1))
-          ],
-        ),
-        child: Container(
-          margin: margin,
-          width: 40,
-          height: 35,
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: Utils().attributeTypeImage(type),
-                  fit: BoxFit.contain)),
-          child: Padding(
-            padding: padding,
-            child: Text(
-              cost == "-1" ? "?" : cost,
-              style: Constants.cabinStyle.copyWith(
-                  color: Colors.white.withOpacity(0.8),
-                  fontSize: fontSize,
-                  height: height),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-      ),
-    );
+        ? sliderThemedHandler(handlerValue, isRightHandler ? 1 : type!)
+        : sliderPlainHandler(handlerValue);
   }
 }

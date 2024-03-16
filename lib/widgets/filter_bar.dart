@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../constants.dart';
 import '../controllers/library_controller/library_controller.dart';
 import 'dropdown_selector.dart';
-import 'filter_slider.dart';
+import 'filter_slider/filter_slider.dart';
 import 'ink_icon.dart';
 
 final _height = 50.0.obs;

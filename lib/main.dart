@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'controllers/translation_controller/translation_controller.dart';
-import 'data/api/api_client.dart';
+import 'data/card_data/cards_api_client.dart';
 
 void main() {
   initializeDependencies();
@@ -13,11 +13,11 @@ void main() {
 }
 
 void initializeDependencies() {
-  ApiClient apiClient = ApiClient();
+  CardsApiClient cardsApiClient = CardsApiClient();
   var translationController = TranslationController(TranslationState());
   var filterController = FilterController(FilterState());
   var libraryController = LibraryController(
-      LibraryState(), apiClient, filterController, translationController);
+      LibraryState(), cardsApiClient, filterController, translationController);
 
   Get.put(translationController);
   Get.put(filterController);

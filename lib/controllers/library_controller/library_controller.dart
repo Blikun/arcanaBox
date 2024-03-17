@@ -3,22 +3,22 @@ import 'dart:developer';
 import 'package:arcana_box/constants.dart';
 import 'package:arcana_box/controllers/filter_controller/filter_controller.dart';
 import 'package:arcana_box/controllers/translation_controller/translation_controller.dart';
+import 'package:arcana_box/data/card_data/cards_api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 
-import '../../data/api/api_client.dart';
 import '../../models/card.dart';
 
 part 'library_state.dart';
 
 class LibraryController extends GetxController {
-  final ApiClient apiClient;
+  final CardsApiClient cardsApiClient;
   final LibraryState state;
   final FilterController filterController;
   final TranslationController translationController;
 
-  LibraryController(this.state, this.apiClient, this.filterController, this.translationController);
+  LibraryController(this.state, this.cardsApiClient, this.filterController, this.translationController);
 
   ScrollController scrollController = ScrollController();
 
@@ -55,7 +55,7 @@ class LibraryController extends GetxController {
     state.commState.value = CommState.loading;
 
     List<CardModel> searchedCards =
-        await apiClient.searchFilterCard(filterController.state.filters.value, page);
+        await cardsApiClient.searchFilterCard(filterController.state.filters.value, page);
     for (CardModel card in searchedCards) {
       if (!state.library.contains(card)) {
         state.library.add(card);

@@ -259,9 +259,8 @@ class FilterBar extends StatelessWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(right: 8.0),
-                            // Adjust padding as needed
                             child: Text(
-                              'Type', // Your label text
+                              'Type',
                               style: Constants.cabinStyle.copyWith(
                                   color: Constants.goldColor.withOpacity(0.75),
                                   fontSize: 17,

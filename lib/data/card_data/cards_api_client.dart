@@ -3,7 +3,7 @@ import 'package:arcana_box/models/filters.dart';
 import '../../models/card.dart';
 import 'api_lorcana.dart';
 
-class ApiClient extends LorcanaApi {
+class CardsApiClient extends LorcanaApi {
 
   Future<List<CardModel>> searchPaginated(
       FiltersModel filters,

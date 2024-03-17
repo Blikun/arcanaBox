@@ -4,11 +4,11 @@ import 'package:dio/dio.dart';
 
 import '../../models/card.dart';
 import '../../models/filters.dart';
-import 'api_interface.dart';
+import 'cards_api_interface.dart';
 
-class LorcanaApi implements API {
+class LorcanaApi implements CardsAPI {
 
-  final dio = Dio(BaseOptions(baseUrl: "https://api.lorcana-api.com"));
+  final dio = Dio(BaseOptions(baseUrl: "https://card_data.lorcana-card_data.com"));
   String cardsAll = "/cards/all";
   String cardsFetch = "/cards/fetch";
   int pageSize = 21;

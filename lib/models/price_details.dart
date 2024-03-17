@@ -1,22 +1,22 @@
-class PriceDetailsModel {
+class PriceDetails {
   final int detailsId;
   final int? priceCents;
   final String? currency;
 
-  PriceDetailsModel({required this.detailsId,this.currency, this.priceCents});
+  PriceDetails({required this.detailsId,this.currency, this.priceCents});
 
-  PriceDetailsModel copyWith({
+  PriceDetails copyWith({
     required int detailsID,
     int? priceCents,
     String? currency,
   }) =>
-      PriceDetailsModel(
+      PriceDetails(
           detailsId: detailsID,
           currency: currency ?? this.currency,
           priceCents: priceCents ?? this.priceCents);
 
-  factory PriceDetailsModel.fromCardTraderJson(Map<String, dynamic> json, detailsId) {
-    return PriceDetailsModel(
+  factory PriceDetails.fromCardTraderJson(Map<String, dynamic> json, detailsId) {
+    return PriceDetails(
       priceCents: json["price_cents"],
       currency:  json["price"]["currency_symbol"],
       detailsId: detailsId,

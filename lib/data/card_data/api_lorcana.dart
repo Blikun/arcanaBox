@@ -6,13 +6,12 @@ import '../../models/card.dart';
 import '../../models/filters.dart';
 import 'cards_api_interface.dart';
 
+
 class LorcanaApi implements CardsAPI {
 
-  final dio = Dio(BaseOptions(baseUrl: "https://card_data.lorcana-card_data.com"));
-  String cardsAll = "/cards/all";
-  String cardsFetch = "/cards/fetch";
+  final dio = Dio(BaseOptions(baseUrl: "https://api.lorcana-api.com"));
+  String cardSearchEp = "/cards/fetch";
   int pageSize = 21;
-
 
   @override
   Future<List<CardModel>> searchFilterCard(FiltersModel filters, int page) async {
@@ -43,8 +42,8 @@ class LorcanaApi implements CardsAPI {
     }
 
     String searchQuery = searchParams.join(';');
-    log("'$cardsFetch?page=$page&pagesize=$pageSize&search=$searchQuery'");
-    final response = await dio.get('$cardsFetch?page=$page&pagesize=$pageSize&search=$searchQuery');
+    log("'$cardSearchEp?page=$page&pagesize=$pageSize&search=$searchQuery'");
+    final response = await dio.get('$cardSearchEp?page=$page&pagesize=$pageSize&search=$searchQuery');
 
     List<CardModel> cards = List<CardModel>.from(response.data.map((x) => CardModel.fromJson(x)));
     return cards;

@@ -10,6 +10,8 @@ class Constants {
 
   static const String enchanted = "assets/icons/enchantedIcon.png";
 
+  static const String cardTrader = "assets/icons/cardtrader.png";
+
   static const String willpowerFrame = "assets/willpower.png";
   static const String strengthFrame = "assets/strength.png";
   static const String loreFrame = "assets/lore.png";

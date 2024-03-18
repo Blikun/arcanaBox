@@ -1,3 +1,4 @@
+import 'package:arcana_box/controllers/price_controller/price_controller.dart';
 import 'package:arcana_box/widgets/translation_frame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -8,12 +9,15 @@ import '../controllers/translation_controller/translation_controller.dart';
 import '../models/card.dart';
 import 'dart:math' as math;
 
+import '../models/price_details.dart';
+
 class CardDetailsDialog extends StatelessWidget {
   final CardModel card;
   final TranslationController? translationService;
 
   CardDetailsDialog({super.key, required this.card, this.translationService});
 
+  final PriceController priceController = Get.find<PriceController>();
   final RxBool _hasAlternateArt = false.obs;
   final RxBool _rotated = false.obs;
 
@@ -35,17 +39,18 @@ class CardDetailsDialog extends StatelessWidget {
                   child: Transform.rotate(
                     angle: _rotated.isTrue ? -math.pi / -2 : 0,
                     child: Stack(
+                      alignment: Alignment.bottomCenter,
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(18),
                           child: Transform.translate(
                             offset: Offset.fromDirection(1, -1),
-                            child: Obx(() =>
-                            _hasAlternateArt.isTrue
+                            child: Obx(() => _hasAlternateArt.isTrue
                                 ? _enchantedDisplay()
                                 : _standardDisplay()),
                           ),
                         ),
+                        _priceInfo(),
                         if (card.enchantedImage?.isNotEmpty ?? false)
                           _enchantedButton(),
                         if (card.type == 'Location') _rotateButton(),
@@ -106,17 +111,15 @@ class CardDetailsDialog extends StatelessWidget {
 
   Widget _enchantedButton() {
     return Positioned(
-      right: 4,
       child: Stack(
         children: [
           ElevatedButton(
             onPressed: () => _hasAlternateArt.toggle(),
             child: Padding(
               padding: const EdgeInsets.only(left: 22),
-              child: Obx(() =>
-                  Text(
-                      _hasAlternateArt.isTrue ? "Alternate" : "Standard",
-                      style: const TextStyle(fontSize: 13))),
+              child: Obx(() => Text(
+                  _hasAlternateArt.isTrue ? "Alternate" : "Standard",
+                  style: const TextStyle(fontSize: 13))),
             ),
           ),
           Positioned(
@@ -129,6 +132,39 @@ class CardDetailsDialog extends StatelessWidget {
                 ),
               )),
         ],
+      ),
+    );
+  }
+
+  Widget _priceInfo() {
+    PriceDetails priceDetails = priceController.state.priceDetails.value.entries.firstWhere((generationEntry) => generationEntry.key == card.setNum).value.entries.firstWhere((cardEntry) => cardEntry.key == card.cardNum).value;
+    return Positioned(
+      top: 10, right: 15,
+      child: Container(
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(8),
+            topRight: Radius.circular(8),
+          ),
+          color: Colors.black87,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 6, left: 7, top: 3, right: 3),
+          child: Row(children: [
+            SizedBox(height:18, child: Image.asset(Constants.cardTrader)),
+            SizedBox(width: 5,),
+            priceDetails.priceCents != null ? Row(children: [
+              Text(
+                priceDetails.priceCents!.toStringAsFixed(2),
+                style: (Constants.cabinStyle.copyWith(color: Colors.white60)),
+              ),
+              Text(
+               " ${priceDetails.currency}",
+                style: (Constants.cabinStyle.copyWith(color: Colors.white60)),
+              )
+            ],) : const SizedBox(width: 40, child: LinearProgressIndicator(color: Colors.white10,),),
+          ],)
+        ),
       ),
     );
   }

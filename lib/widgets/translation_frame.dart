@@ -87,7 +87,7 @@ class TranslationFrame extends StatelessWidget {
                   right: 15,
                   bottom: 1.5,
                   child: Text(
-                    "Unofficial translation",
+                    "Translation by Google",
                     style: Constants.googleHeebo.copyWith(
                       color: Colors.white.withOpacity(0.75),
                       fontSize: 9,

@@ -15,6 +15,8 @@ class PriceController extends GetxController {
   @override
   void onInit() {
     getBlueprintIds(1);
+    getBlueprintIds(2);
+    getBlueprintIds(3);
     super.onInit();
   }
 
@@ -31,7 +33,7 @@ class PriceController extends GetxController {
         .value
         .blueprintId;
 
-    PriceDetails? newPriceDetails = await pricesApiClient.getPrice(blueprintId);
+    PriceDetails? newPriceDetails = await pricesApiClient.getPrice(blueprintId: blueprintId, isFoil: false);
 
     if (newPriceDetails != null) {
       final newPriceDetailsState =

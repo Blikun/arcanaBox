@@ -46,11 +46,11 @@ class CardTraderApi implements PricesAPI {
 
 
 
-  Future<PriceDetails?> getPrice(int blueprintId) async {
+  Future<PriceDetails?> getPrice({required int blueprintId, required bool isFoil}) async {
     PriceDetails? details;
     try {
-      final response = await dio.get('$productsEp?blueprint_id=$blueprintId&quantity=1');
-      double averagePrice = Utils().calculateAveragePrice(entries: response.data.entries.first.value, max: 10, currency: 'EUR');
+      final response = await dio.get('$productsEp?blueprint_id=$blueprintId&quantity=1&foil=$isFoil');
+      double averagePrice = Utils().calculateAveragePrice(entries: response.data.entries.first.value, max: 5, currency: 'EUR');
       details = PriceDetails(blueprintId: blueprintId, currency: '€', priceCents: averagePrice);
       log("Got price -> ${details.priceCents}${details.currency}");
       return details;

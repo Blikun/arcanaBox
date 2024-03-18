@@ -104,11 +104,14 @@ class Utils {
   }
 
   int cardNumberFix(String number) {
-    if (number.contains('/')) {
-      List<String> split = number.split('/');
+    // Remove all non-numeric characters (including letters and special characters)
+    String cleanedNumber = number.replaceAll(RegExp(r'[^0-9]'), '');
+
+    if (cleanedNumber.contains('/')) {
+      List<String> split = cleanedNumber.split('/');
       return int.parse(split.first);
     }
-    return int.parse(number);
+    return int.parse(cleanedNumber);
   }
 
   Color sliderNativeColorFix() {

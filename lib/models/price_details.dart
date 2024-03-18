@@ -1,3 +1,6 @@
+PriceDetails priceDetailsFromCardTrader(Map<String, dynamic> json, int detailsId) =>
+    PriceDetails.fromCardTraderJson(json, detailsId);
+
 class PriceDetails {
   final int detailsId;
   final int? priceCents;

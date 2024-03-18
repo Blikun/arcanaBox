@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:arcana_box/models/price_details.dart';
 
 import '../utils.dart';
 
@@ -30,7 +29,6 @@ class CardModel {
   final String? setId;
   final String? flavorText;
   CardTranslations? cardTranslations;
-  PriceDetails? priceDetails;
 
   CardModel({
     this.artist,
@@ -55,7 +53,6 @@ class CardModel {
     this.setId,
     this.flavorText,
     this.cardTranslations,
-    this.priceDetails,
   }) : enchantedImage = Utils()
                 .getEnchantedImage(int.parse("$cardNum$setNum")) ??
             enchantedImage; // Use function to determine enchantedImage as api doesn't provide
@@ -83,7 +80,6 @@ class CardModel {
     String? setId,
     String? flavorText,
     CardTranslations? cardTranslations,
-    PriceDetails? priceDetails,
   }) =>
       CardModel(
           artist: artist ?? this.artist,
@@ -108,7 +104,7 @@ class CardModel {
           setId: setId ?? this.setId,
           flavorText: flavorText ?? this.flavorText,
           cardTranslations: cardTranslations ?? this.cardTranslations,
-          priceDetails: priceDetails ?? this.priceDetails);
+       );
 
   factory CardModel.fromJson(Map<String, dynamic> json) => CardModel(
         artist: json["Artist"],

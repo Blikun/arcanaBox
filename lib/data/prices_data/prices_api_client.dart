@@ -1,9 +1,11 @@
-import 'package:arcana_box/models/filters.dart';
 
-import '../../models/card.dart';
+import '../../models/price_details.dart';
 import 'api_cardtrader.dart';
 
-class ApiClientPrices extends CardTraderApi {
+class PricesApiClient extends CardTraderApi {
 
+  Future<Map<int, PriceDetails>> getBlueprintIds({required int expansionId}){
+    return super.getStoreIds(expansionId);
+  }
 
 }

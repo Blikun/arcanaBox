@@ -3,11 +3,11 @@ import 'dart:developer';
 import 'package:arcana_box/constants.dart';
 import 'package:arcana_box/controllers/filter_controller/filter_controller.dart';
 import 'package:arcana_box/controllers/translation_controller/translation_controller.dart';
-import 'package:arcana_box/data/card_data/cards_api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 
+import '../../data/cards_data/cards_api_client.dart';
 import '../../models/card.dart';
 
 part 'library_state.dart';
@@ -27,9 +27,9 @@ class LibraryController extends GetxController {
     super.onInit();
     filterController.clearAllFilters();
     paginationListener();
-    Future.delayed(const Duration(milliseconds: 250), () {
-      searchPaginated(1);
-    });
+  //  Future.delayed(const Duration(milliseconds: 250), () {
+  //    searchPaginated(1);
+  //  });
   }
 
   void paginationListener() async {

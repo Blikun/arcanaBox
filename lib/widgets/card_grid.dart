@@ -1,3 +1,5 @@
+import 'package:arcana_box/controllers/price_controller/price_controller.dart';
+import 'package:arcana_box/models/card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
@@ -13,6 +15,7 @@ class CardGrid extends StatelessWidget {
   });
 
   final libraryController = Get.find<LibraryController>();
+  final priceController = Get.find<PriceController>();
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +46,10 @@ class CardGrid extends StatelessWidget {
                               libraryController.state.library[index].enchantedImage !=
                                   null),
                       onTap: () {
+                        CardModel card = libraryController.state.library[index];
+                        priceController.getPrice(card.setNum!, card.cardNum!);
                         Get.dialog(CardDetailsDialog(
-                          card: libraryController.state.library[index],
+                          card: card,
                           translationService:
                               libraryController.translationController,
                         ));

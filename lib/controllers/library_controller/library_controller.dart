@@ -27,9 +27,9 @@ class LibraryController extends GetxController {
     super.onInit();
     filterController.clearAllFilters();
     paginationListener();
-  //  Future.delayed(const Duration(milliseconds: 250), () {
-  //    searchPaginated(1);
-  //  });
+    Future.delayed(const Duration(milliseconds: 250), () {
+      searchPaginated(1);
+    });
   }
 
   void paginationListener() async {
@@ -45,13 +45,12 @@ class LibraryController extends GetxController {
 
   void paginateLibrary() {
     if (state.commState.value != CommState.idle) return;
-    log("paginateLibrary");
+    log("paginating library...");
     searchPaginated(state.lastPageFetched.value + 1);
   }
 
   void searchPaginated(int page) async {
     if (state.commState.value != CommState.idle) return;
-    log("searchFilterPaginated: $page");
     state.commState.value = CommState.loading;
 
     List<CardModel> searchedCards =
@@ -62,7 +61,7 @@ class LibraryController extends GetxController {
       }
     }
     state.lastPageFetched.value = page;
-    log("done");
+    log("Got page $page cards");
     state.commState.value = CommState.idle;
   }
 

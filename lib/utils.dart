@@ -87,6 +87,30 @@ class Utils {
 
   }
 
+  double calculateAveragePrice(
+      {required List<dynamic> entries, int max = 5, String currency = 'EUR'}) {
+
+    double sum = 0;
+    int checked = 0;
+
+    for (var i = 0; i < entries.length && checked < max; i++) {
+      if (entries[i]['price_currency'] == 'EUR') {
+        sum += entries[i]['price_cents'] ?? 0;
+        checked++;
+      }
+    }
+    double averagePriceCents = checked > 0 ? sum / checked : 0;
+    return averagePriceCents / 100;
+  }
+
+  int cardNumberFix(String number) {
+    if (number.contains('/')) {
+      List<String> split = number.split('/');
+      return int.parse(split.first);
+    }
+    return int.parse(number);
+  }
+
   Color sliderNativeColorFix() {
     return Platform.isAndroid
         ? Constants.goldColor.withOpacity(0.25)

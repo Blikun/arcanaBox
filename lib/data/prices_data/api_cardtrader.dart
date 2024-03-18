@@ -1,15 +1,18 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import '../../models/price_details.dart';
 import '../../secret.dart';
+import '../../utils.dart';
 import 'prices_api_interface.dart';
 
 class CardTraderApi implements PricesAPI {
   final dio = Dio(BaseOptions(
-      baseUrl: "https://api.cardtrader.com/api/v2",
-      headers: {"Authorization": cardTraderToken}));
+      baseUrl: 'https://api.cardtrader.com/api/v2',
+      headers: {'Authorization': cardTraderToken}));
 
-  String blueprintsEp = "/blueprints/export";
-  String productsEp = "marketplace/products";
+  String blueprintsEp = '/blueprints/export';
+  String productsEp = '/marketplace/products';
 
   final Map<int, int> expansionIdMatches = {
     1 : 3469,
@@ -21,25 +24,17 @@ class CardTraderApi implements PricesAPI {
 
     Map<int, PriceDetails> detailsMap = {};
 
-    int getNumber(String number) {
-      if (number.contains("/")) {
-        List<String> split = number.split("/");
-        return int.parse(split.first);
-      }
-      return int.parse(number);
-    }
-
-    int id = expansionIdMatches.entries.firstWhere((entry) => entry.key == expansionId).value;
+    int expansionBlueprintId = expansionIdMatches.entries.firstWhere((entry) => entry.key == expansionId).value;
 
     try {
-      final response = await dio.get("$blueprintsEp?expansion_id=$id");
+      final response = await dio.get('$blueprintsEp?expansion_id=$expansionBlueprintId');
 
       for (var element in response.data) {
-        if (element["fixed_properties"].isNotEmpty &&
-            element["fixed_properties"]["collector_number"] != "") {
+        if (element['fixed_properties'].isNotEmpty &&
+            element['fixed_properties']['collector_number'] != '') {
           detailsMap.addAll({
-            getNumber(element["fixed_properties"]["collector_number"]):
-                PriceDetails(detailsId: element["id"])
+            Utils().cardNumberFix(element['fixed_properties']['collector_number']):
+                PriceDetails(blueprintId: element['id'])
           });
         }
       }
@@ -51,4 +46,16 @@ class CardTraderApi implements PricesAPI {
 
 
 
+  Future<PriceDetails?> getPrice(int blueprintId) async {
+    PriceDetails? details;
+    try {
+      final response = await dio.get('$productsEp?blueprint_id=$blueprintId&quantity=1');
+      double averagePrice = Utils().calculateAveragePrice(entries: response.data.entries.first.value, max: 10, currency: 'EUR');
+      details = PriceDetails(blueprintId: blueprintId, currency: '€', priceCents: averagePrice);
+      log("Got price -> ${details.priceCents}${details.currency}");
+      return details;
+    } catch (e) {
+      throw Exception('Failed to get store price - $e');
+    }
+  }
 }

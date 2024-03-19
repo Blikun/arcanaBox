@@ -48,9 +48,10 @@ class PriceController extends GetxController {
       state.priceDetails.value = newPriceDetailsState;
       log("Card $cardId - $expansionId price updated");
     }
+    update();
   }
 
-  Future<void> getPrice(int expansionId, int cardId) async {
+  Future<void> getPriceIfAbsent(int expansionId, int cardId) async {
     bool exists = state.priceDetails.value.containsKey(expansionId) &&
         state.priceDetails.value[expansionId]!.containsKey(cardId) &&
         state.priceDetails.value[expansionId]![cardId]!.priceCents != null;

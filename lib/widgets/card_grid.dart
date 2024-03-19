@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 
 import '../constants.dart';
 import '../controllers/library_controller/library_controller.dart';
-import 'card_details_dialog.dart';
+import 'card_details/card_details_dialog.dart';
 import 'card_preview.dart';
 
 class CardGrid extends StatelessWidget {
@@ -47,7 +47,7 @@ class CardGrid extends StatelessWidget {
                                   null),
                       onTap: () {
                         CardModel card = libraryController.state.library[index];
-                        priceController.getPrice(card.setNum!, card.cardNum!);
+                        priceController.getPriceIfAbsent(card.setNum!, card.cardNum!);
                         Get.dialog(CardDetailsDialog(
                           card: card,
                           translationService:

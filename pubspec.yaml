@@ -32,11 +32,9 @@ dependencies:
     sdk: flutter
   get:
   flutter_animate:
-  flip_card:
   translator:
   cached_network_image:
   google_fonts:
-  internet_connection_checker_plus:
   icon_decoration:
   flutter_xlider:
   cupertino_icons: ^1.0.2

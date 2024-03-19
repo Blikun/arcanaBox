@@ -20,7 +20,8 @@ class CardTraderApi implements PricesAPI {
     3 : 3469,
   };
 
-  Future<Map<int, PriceDetails>> getStoreIds(int expansionId) async {
+  @override
+  Future<Map<int, PriceDetails>> queryStoreIds({required int expansionId}) async {
 
     Map<int, PriceDetails> detailsMap = {};
 
@@ -46,7 +47,8 @@ class CardTraderApi implements PricesAPI {
 
 
 
-  Future<PriceDetails?> getPrice({required int blueprintId, required bool isFoil}) async {
+  @override
+  Future<PriceDetails?> queryPrice({required int blueprintId, required bool isFoil}) async {
     PriceDetails? details;
     try {
       final response = await dio.get('$productsEp?blueprint_id=$blueprintId&quantity=1&foil=$isFoil');

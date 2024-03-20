@@ -9,7 +9,7 @@ class CardsApiClient extends LorcanaApi {
       FiltersModel filters,
       int page,
   ) {
-    return super.searchFilterCard(
+    return super.queryFilterCard(
    filters, page);
   }
 }

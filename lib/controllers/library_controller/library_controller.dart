@@ -54,7 +54,7 @@ class LibraryController extends GetxController {
     state.commState.value = CommState.loading;
 
     List<CardModel> searchedCards =
-        await cardsApiClient.searchFilterCard(filterController.state.filters.value, page);
+        await cardsApiClient.queryFilterCard(filterController.state.filters.value, page);
     for (CardModel card in searchedCards) {
       if (!state.library.contains(card)) {
         state.library.add(card);

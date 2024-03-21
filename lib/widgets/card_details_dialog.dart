@@ -1,4 +1,6 @@
+import 'package:arcana_box/controllers/library_controller/library_controller.dart';
 import 'package:arcana_box/controllers/price_controller/price_controller.dart';
+import 'package:arcana_box/widgets/card_details/price_info.dart';
 import 'package:arcana_box/widgets/translation_frame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -12,17 +14,17 @@ import 'dart:math' as math;
 import '../models/price_details.dart';
 
 class CardDetailsDialog extends StatelessWidget {
-  final CardModel card;
+  final int index;
   final TranslationController? translationService;
+  CardDetailsDialog({super.key, this.translationService, required this.index});
 
-  CardDetailsDialog({super.key, required this.card, this.translationService});
-
-  final PriceController priceController = Get.find<PriceController>();
-  final RxBool _hasAlternateArt = false.obs;
+  final LibraryController libraryController = Get.find<LibraryController>();
+  final RxBool _showAlternateArt = false.obs;
   final RxBool _rotated = false.obs;
 
   @override
   Widget build(BuildContext context) {
+    final CardModel card = libraryController.state.library.value[index];
     return GestureDetector(
       onTap: () => Get.back(),
       child: Material(
@@ -45,12 +47,12 @@ class CardDetailsDialog extends StatelessWidget {
                           borderRadius: BorderRadius.circular(18),
                           child: Transform.translate(
                             offset: Offset.fromDirection(1, -1),
-                            child: Obx(() => _hasAlternateArt.isTrue
-                                ? _enchantedDisplay()
-                                : _standardDisplay()),
+                            child: Obx(() => _showAlternateArt.isTrue
+                                ? _enchantedDisplay(card)
+                                : _standardDisplay(card)),
                           ),
                         ),
-                        _priceInfo(),
+                        PriceInfoDetails(card: card),
                         if (card.enchantedImage?.isNotEmpty ?? false)
                           _enchantedButton(),
                         if (card.type == 'Location') _rotateButton(),
@@ -70,7 +72,7 @@ class CardDetailsDialog extends StatelessWidget {
     );
   }
 
-  Widget _standardDisplay() {
+  Widget _standardDisplay(CardModel card) {
     return Image.network(
       card.image!,
       errorBuilder: (context, error, stackTrace) =>
@@ -89,7 +91,7 @@ class CardDetailsDialog extends StatelessWidget {
     );
   }
 
-  Widget _enchantedDisplay() {
+  Widget _enchantedDisplay(CardModel card) {
     return Animate(
       autoPlay: true,
       onPlay: (controller) => controller.repeat(),
@@ -114,11 +116,11 @@ class CardDetailsDialog extends StatelessWidget {
       child: Stack(
         children: [
           ElevatedButton(
-            onPressed: () => _hasAlternateArt.toggle(),
+            onPressed: () => _showAlternateArt.toggle(),
             child: Padding(
               padding: const EdgeInsets.only(left: 22),
               child: Obx(() => Text(
-                  _hasAlternateArt.isTrue ? "Alternate" : "Standard",
+                  _showAlternateArt.isTrue ? "Alternate" : "Standard",
                   style: const TextStyle(fontSize: 13))),
             ),
           ),
@@ -136,62 +138,7 @@ class CardDetailsDialog extends StatelessWidget {
     );
   }
 
-  Widget _priceInfo() {
-    PriceDetails priceDetails = priceController.state.priceDetails.value.entries
-        .firstWhere((generationEntry) => generationEntry.key == card.setNum)
-        .value
-        .entries
-        .firstWhere((cardEntry) => cardEntry.key == card.cardNum)
-        .value;
-    return Positioned(
-      top: 0,
-      right: 0,
-      child: Container(
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(8),
-            topRight: Radius.circular(8),
-          ),
-          color: Colors.black,
-        ),
-        child: Padding(
-            padding:
-                const EdgeInsets.only(bottom: 8, left: 8, top: 10, right: 10),
-            child: Row(
-              children: [
-                SizedBox(height: 18, child: Image.asset(Constants.cardTrader)),
-                const SizedBox(
-                  width: 5,
-                ),
-                priceDetails.priceCents != null
-                    ? Row(
-                        children: [
-                          Text(
-                            priceDetails.priceCents!.toStringAsFixed(2).replaceAll(".", ","),
-                            style: (Constants.cabinStyle.copyWith(
-                                color: Colors.white60,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w800,
-                            letterSpacing: 0.7)),
-                          ),
-                          Text(
-                            " ${priceDetails.currency} ",
-                            style: (Constants.cabinStyle
-                                .copyWith(color: Colors.white60, fontSize: 13)),
-                          )
-                        ],
-                      )
-                    : const SizedBox(
-                        width: 43,
-                        child: LinearProgressIndicator(
-                          color: Colors.white10,
-                        ),
-                      ),
-              ],
-            )),
-      ),
-    );
-  }
+
 
   Widget _rotateButton() {
     return Positioned(

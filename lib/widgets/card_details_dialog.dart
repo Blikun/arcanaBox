@@ -1,40 +1,72 @@
+import 'dart:developer';
+
 import 'package:arcana_box/controllers/library_controller/library_controller.dart';
-import 'package:arcana_box/controllers/price_controller/price_controller.dart';
+import 'package:arcana_box/widgets/card_details/enchanted_button.dart';
+import 'package:arcana_box/widgets/card_details/enchanted_display_card.dart';
 import 'package:arcana_box/widgets/card_details/price_info.dart';
+import 'package:arcana_box/widgets/card_details/rotate_card_button.dart';
+import 'package:arcana_box/widgets/card_details/standard_display_card.dart';
 import 'package:arcana_box/widgets/translation_frame.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
-import 'package:icon_decoration/icon_decoration.dart';
-import '../constants.dart';
 import '../controllers/translation_controller/translation_controller.dart';
-import '../models/card.dart';
 import 'dart:math' as math;
-
-import '../models/price_details.dart';
 
 class CardDetailsDialog extends StatelessWidget {
   final int index;
   final TranslationController? translationService;
+
   CardDetailsDialog({super.key, this.translationService, required this.index});
 
   final LibraryController libraryController = Get.find<LibraryController>();
   final RxBool _showAlternateArt = false.obs;
   final RxBool _rotated = false.obs;
+  final RxInt _indexDisplacement = 0.obs;
+  static const _sensibilityThreshold = 25;
 
   @override
   Widget build(BuildContext context) {
-    final CardModel card = libraryController.state.library.value[index];
+    Offset? initialDragPosition;
+
     return GestureDetector(
       onTap: () => Get.back(),
+      onHorizontalDragStart: (details) {
+        initialDragPosition = details.globalPosition;
+      },
+      onHorizontalDragUpdate: (details) {
+        if (initialDragPosition != null) {
+          final delta = details.globalPosition.dx - initialDragPosition!.dx;
+
+          if (delta.abs() > _sensibilityThreshold) {
+            _showAlternateArt.value = false;
+            if (delta < 0) {
+              // Dragged left
+              log('Dragged left $_indexDisplacement');
+            } else {
+              _indexDisplacement.value--;
+              log('Dragged right $_indexDisplacement');
+            }
+            initialDragPosition = null;
+          }
+        }
+      },
       child: Material(
         color: Colors.black54,
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              Obx(() {
-                return AnimatedScale(
+          child: Obx(() {
+            int newIndex = index + _indexDisplacement.value;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (newIndex == libraryController.state.library.length - 2) {
+                libraryController.paginateLibrary();
+              }
+            });
+            newIndex = math.max(0,
+                math.min(newIndex, libraryController.state.library.length - 1));
+            final cardValue = libraryController.state.library[newIndex];
+            return Column(
+              children: [
+                AnimatedScale(
                   scale: _rotated.isTrue ? 0.72 : 1,
                   curve: Curves.fastEaseInToSlowEaseOut,
                   duration: const Duration(milliseconds: 500),
@@ -48,116 +80,30 @@ class CardDetailsDialog extends StatelessWidget {
                           child: Transform.translate(
                             offset: Offset.fromDirection(1, -1),
                             child: Obx(() => _showAlternateArt.isTrue
-                                ? _enchantedDisplay(card)
-                                : _standardDisplay(card)),
+                                ? EnchantedDisplayCard(card: cardValue)
+                                : StandardDisplayCard(card: cardValue)),
                           ),
                         ),
-                        PriceInfoDetails(card: card),
-                        if (card.enchantedImage?.isNotEmpty ?? false)
-                          _enchantedButton(),
-                        if (card.type == 'Location') _rotateButton(),
+                        PriceInfoDetails(card: cardValue),
+                        if (cardValue.enchantedImage?.isNotEmpty ?? false)
+                          EnchantedButton(
+                              onToggle: () => _showAlternateArt.toggle(),
+                              showAlternateArt: _showAlternateArt),
+                        if (cardValue.type == 'Location')
+                          RotateCardButton(
+                              onRotate: () => _rotated.value = !_rotated.value,
+                              rotated: _rotated),
                       ],
                     ),
                   ),
-                );
-              }),
-              const SizedBox(height: 5),
-              if (translationService != null)
-                TranslationFrame(
-                    translationService: translationService!, card: card),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _standardDisplay(CardModel card) {
-    return Image.network(
-      card.image!,
-      errorBuilder: (context, error, stackTrace) =>
-          Image.asset(Constants.cardBack),
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-        return Opacity(
-          opacity: 0.4,
-          child: Image.asset(Constants.cardBack, color: Colors.black),
-        ).animate(onPlay: (controller) => controller.repeat(), effects: [
-          ShimmerEffect(
-              duration: const Duration(seconds: 1),
-              color: Colors.purple.withOpacity(0.25))
-        ]);
-      },
-    );
-  }
-
-  Widget _enchantedDisplay(CardModel card) {
-    return Animate(
-      autoPlay: true,
-      onPlay: (controller) => controller.repeat(),
-      effects: [
-        ShimmerEffect(
-            duration: const Duration(seconds: 6),
-            angle: 40,
-            size: 4,
-            colors: Constants.foilColors),
-        ShimmerEffect(
-            angle: 40,
-            duration: const Duration(milliseconds: 2500),
-            size: 0.5,
-            color: Colors.white.withOpacity(0.07)),
-      ],
-      child: Image.asset(card.enchantedImage!),
-    );
-  }
-
-  Widget _enchantedButton() {
-    return Positioned(
-      child: Stack(
-        children: [
-          ElevatedButton(
-            onPressed: () => _showAlternateArt.toggle(),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 22),
-              child: Obx(() => Text(
-                  _showAlternateArt.isTrue ? "Alternate" : "Standard",
-                  style: const TextStyle(fontSize: 13))),
-            ),
-          ),
-          Positioned(
-              top: 12,
-              left: 17,
-              child: IgnorePointer(
-                child: Image.asset(
-                  Constants.enchanted,
-                  scale: 8,
                 ),
-              )),
-        ],
-      ),
-    );
-  }
-
-
-
-  Widget _rotateButton() {
-    return Positioned(
-      right: 0,
-      bottom: _rotated.isTrue ? null : 0,
-      child: IconButton(
-        onPressed: () {
-          _rotated.value = !_rotated.value;
-        },
-        highlightColor: Colors.black38,
-        padding: EdgeInsets.zero,
-        icon: const DecoratedIcon(
-          icon: Icon(
-            Icons.rotate_90_degrees_cw_rounded,
-            color: Constants.goldColor,
-            size: 35,
-          ),
-          decoration: IconDecoration(
-              border: IconBorder(width: 10, color: Colors.black87)),
+                const SizedBox(height: 5),
+                if (translationService != null)
+                  TranslationFrame(
+                      translationService: translationService!, card: cardValue),
+              ],
+            );
+          }),
         ),
       ),
     );

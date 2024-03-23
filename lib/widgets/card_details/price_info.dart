@@ -8,13 +8,13 @@ import '../../models/price_details.dart';
 
 class PriceInfoDetails extends StatelessWidget {
   final CardModel card;
-
   PriceInfoDetails({super.key, required this.card});
 
   final PriceController priceController = Get.find<PriceController>();
 
   @override
   Widget build(BuildContext context) {
+    priceController.getPrice(card.setNum!, card.cardNum!);
     return Positioned(
       top: 0,
       right: 0,

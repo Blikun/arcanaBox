@@ -50,7 +50,6 @@ class CardGrid extends StatelessWidget {
                         priceController.getPrice(card.setNum!, card.cardNum!);
                         Get.dialog(CardDetailsDialog(
                           index: index,
-
                           translationService:
                               libraryController.translationController,
                         ));

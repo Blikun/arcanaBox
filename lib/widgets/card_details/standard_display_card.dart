@@ -7,7 +7,7 @@ import '../../models/card.dart';
 class StandardDisplayCard extends StatelessWidget {
   final CardModel card;
 
-  const StandardDisplayCard({Key? key, required this.card}) : super(key: key);
+  const StandardDisplayCard({super.key, required this.card});
 
   @override
   Widget build(BuildContext context) {

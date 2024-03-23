@@ -105,7 +105,7 @@ class Utils {
 
   int cardNumberFix(String number) {
     // Remove all non-numeric characters (including letters and special characters)
-    String cleanedNumber = number.replaceAll(RegExp(r'[^0-9]'), '');
+    String cleanedNumber = number.replaceAll(RegExp(r'[^0-9/]'), '');
 
     if (cleanedNumber.contains('/')) {
       List<String> split = cleanedNumber.split('/');

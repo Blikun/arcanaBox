@@ -5,7 +5,7 @@ import '../../models/card.dart';
 
 abstract class CardsAPI {
 
-  Future<List<CardModel>> searchFilterCard(
+  Future<List<CardModel>> queryFilterCard(
      FiltersModel filters,
       int page,);
 }

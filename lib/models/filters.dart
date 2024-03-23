@@ -1,3 +1,4 @@
+
 class FiltersModel {
   String? type;
   String? name;

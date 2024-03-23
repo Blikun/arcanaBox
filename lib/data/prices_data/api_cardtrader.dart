@@ -17,7 +17,7 @@ class CardTraderApi implements PricesAPI {
   final Map<int, int> expansionIdMatches = {
     1 : 3469,
     2 : 3505,
-    3 : 3469,
+    3 : 3592,
   };
 
   @override

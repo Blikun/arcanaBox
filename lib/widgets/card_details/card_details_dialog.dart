@@ -38,17 +38,17 @@ class CardDetailsDialog extends StatelessWidget {
         if (initialDragPosition != null) {
           final delta = details.globalPosition.dx - initialDragPosition!.dx;
           if (delta.abs() > _sensibilityThreshold) {
-            _showAlternateArt.value = false;
             if (delta < 0 &&
                 _indexDisplacement.value <
                     libraryController.state.library.length) {
               _indexDisplacement.value++;
               log('Dragged left $_indexDisplacement');
-            } else if (delta > 0 && _indexDisplacement.value > 0) {
+            } else if (delta > 0 && _indexDisplacement.value+index > 0) {
               _indexDisplacement.value--;
               log('Dragged right $_indexDisplacement');
             }
             initialDragPosition = null;
+            _showAlternateArt.value = false;
           }
         }
       },

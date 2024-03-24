@@ -1,7 +1,5 @@
 import 'package:arcana_box/widgets/text_progress_indicator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import '../constants.dart';

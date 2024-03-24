@@ -9,44 +9,33 @@ import '../../models/card_translation.dart';
 
 part 'translation_state.dart';
 
-class TranslationController {
+class TranslationController extends GetxController{
   final TranslationState state;
 
   TranslationController(this.state);
 
   void translateCard(CardModel card) async {
+    final currentLanguage = state.appLanguage.value;
+    final translationsForCurrentLanguage = state.translations.value.putIfAbsent(currentLanguage, () => []);
 
-    final Map<Lang, List<CardTranslation>> storedTranslations = state.translations.value;
+    final existingTranslation = translationsForCurrentLanguage
+        .firstWhereOrNull((translation) => translation.cardId == card.cardNum);
+    if (existingTranslation?.bodyText != null) return;
 
-    if (storedTranslations[state.appLanguage.value] == null) {
-      storedTranslations[state.appLanguage.value] = [];
-    }
-
-    if (state.translations.value[state.appLanguage.value]!
-        .any((element) => element.cardId == card.cardNum)) {
-      if (state.translations.value[state.appLanguage.value]![card.cardNum]
-              .bodyText != null) return;
-    }
-
-    CardTranslation translation = await getTranslate(card);
+    final translation = await getTranslate(card);
     if (translation.bodyText == null) return;
 
-    List<CardTranslation> actualLangTranslations =
-        storedTranslations[state.appLanguage.value]!;
-
-    int existingTranslationIndex = actualLangTranslations.indexWhere(
-        (cardTranslation) => cardTranslation.cardId == card.cardNum);
-
-    if (existingTranslationIndex != -1) {
-      actualLangTranslations[existingTranslationIndex] = translation;
+    // Update or add the new translation
+    final translationIndex = translationsForCurrentLanguage.indexWhere((t) => t.cardId == card.cardNum);
+    if (translationIndex != -1) {
+      translationsForCurrentLanguage[translationIndex] = translation;
     } else {
-      actualLangTranslations.add(translation);
+      translationsForCurrentLanguage.add(translation);
     }
-
-    state.translations.value = storedTranslations;
-
+    update();
     log("${card.name} - Translated");
   }
+
 
   Future<CardTranslation> getTranslate(CardModel card) async {
     String? text = card.bodyText;

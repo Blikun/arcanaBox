@@ -4,7 +4,7 @@ import 'dart:io';
 import 'constants.dart';
 
 class Utils {
-  RichText buildRichText(String text) {
+  RichText buildCoolText(String text) {
     // regular expression to find text within parentheses
     final RegExp regExpPar = RegExp(r'\(([^)]+)\)');
     final Iterable<RegExpMatch> matches = regExpPar.allMatches(text);

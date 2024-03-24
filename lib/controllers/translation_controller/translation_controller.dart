@@ -14,7 +14,20 @@ class TranslationController {
 
   void translateCard(CardModel card) async {
     CardTranslation translation = await getTranslate(card);
+    
+    if (translation.bodyText != null) {
+      final Map<Lang, List<CardTranslation>> newTranslationState = state.translations.value;
 
+      List<CardTranslation> languageTranslations = newTranslationState[state.appLanguage.value]!.toList();
+
+      languageTranslations[card.cardNum] = translation;
+
+      newTranslationState[state.appLanguage.value] = languageTranslations;
+
+      state.translations.value = newTranslationState;
+
+      log("ñe");
+    }
   }
 
   Future<CardTranslation> getTranslate(CardModel card) async {
@@ -25,8 +38,8 @@ class TranslationController {
         log("Translating");
         var translation = await state.translator.translate(
             prepareForTranslate(text),
-            from: state.baseLanguageFromApi,
-            to: state.language.value);
+            from: languageCodes(state.baseLanguageFromApi),
+            to: languageCodes(state.appLanguage));
         state.commState.value = CommState.idle;
         return CardTranslation(bodyText: translation.toString(), cardId: card.cardNum);
       } catch (e) {

@@ -46,6 +46,7 @@ class TranslationFrame extends StatelessWidget {
                           future:
                               translationService.getTranslate(card),
                           builder: (context, snapshot) {
+                            translationService.translateCard(card);
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
                               return const SizedBox(height: 85,

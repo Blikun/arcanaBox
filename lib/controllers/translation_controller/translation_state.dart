@@ -4,10 +4,10 @@ part of 'translation_controller.dart';
 class TranslationState {
 
     final Rx<CommState> commState = CommState.idle.obs;
-    final Rx<String> language = languageCodes(Lang.es).obs;
-    final baseLanguageFromApi = languageCodes(Lang.en);
+    final Rx<Lang> appLanguage = Lang.es.obs;
+    final baseLanguageFromApi = Lang.en;
     final translator = GoogleTranslator();
-    final Rx<Map<String,CardTranslation>> translations = Rx<Map<String,CardTranslation>>({});
+    final Rx<Map<Lang,List<CardTranslation>>> translations = Rx<Map<Lang,List<CardTranslation>>>({});
 
 }
 

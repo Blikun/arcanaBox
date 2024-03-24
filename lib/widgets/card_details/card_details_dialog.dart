@@ -3,7 +3,6 @@ import 'package:arcana_box/models/card.dart';
 import 'package:arcana_box/widgets/card_details/enchanted_button.dart';
 import 'package:arcana_box/widgets/card_details/enchanted_display_card.dart';
 import 'package:arcana_box/widgets/card_details/price_info.dart';
-import 'package:arcana_box/widgets/card_details/rotate_card_button.dart';
 import 'package:arcana_box/widgets/card_details/standard_display_card.dart';
 import 'package:arcana_box/widgets/translation_frame.dart';
 import 'package:flutter/material.dart';
@@ -80,10 +79,9 @@ class CardDetailsDialogState extends State<CardDetailsDialog>
         _slideFromRight = _dragAmount < 0;
 
         if (_slideFromRight) {
-          _canSwipe = widget.index + _indexDisplacement.value <=
-              libraryController.state.library.length;
+          _canSwipe = (widget.index + 1 + _indexDisplacement.value) < libraryController.state.library.length;
         } else {
-          _canSwipe = widget.index + _indexDisplacement.value > 0;
+          _canSwipe = widget.index -1 + _indexDisplacement.value >= 0;
         }
         if (_dragAmount.abs() > _sensibilityThreshold && _canSwipe) {
           _animationController.forward().then((_) {
@@ -132,7 +130,7 @@ class CardDetailsDialogState extends State<CardDetailsDialog>
                         libraryController.paginateLibrary();
                       }
                     });
-                    return cardSwipper(libraryController.state.library[index]);
+                    return animatedSwiper(libraryController.state.library[index]);
                   }),
                 ),
               );
@@ -143,12 +141,11 @@ class CardDetailsDialogState extends State<CardDetailsDialog>
     );
   }
 
-  Widget cardSwipper(CardModel cardValue) {
+  Widget animatedSwiper(CardModel cardValue) {
     final tiltAngle = _dragAmount / 600;
     const maxTiltRadians = 20 * math.pi / 180;
     final angle =
         math.min(math.max(tiltAngle, -maxTiltRadians), maxTiltRadians);
-
     return AnimatedScale(
       scale: _rotated.value ? 0.72 : 1,
       curve: Curves.fastEaseInToSlowEaseOut,
@@ -189,10 +186,10 @@ class CardDetailsDialogState extends State<CardDetailsDialog>
           EnchantedButton(
               onToggle: () => _showAlternateArt.toggle(),
               showAlternateArt: _showAlternateArt),
-        if (cardValue.type == 'Location')
-          RotateCardButton(
-              onRotate: () => _rotated.value = !_rotated.value,
-              rotated: _rotated),
+       // if (cardValue.type == 'Location')
+       //   RotateCardButton(
+       //       onRotate: () => _rotated.value = !_rotated.value,
+       //       rotated: _rotated),
       ],
     );
   }

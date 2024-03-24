@@ -1,29 +1,40 @@
+import 'dart:developer';
+
+import 'package:arcana_box/constants.dart';
 import 'package:get/get.dart';
 import 'package:translator/translator.dart';
 
 import '../../models/card.dart';
+import '../../models/card_translation.dart';
 part 'translation_state.dart';
 
 class TranslationController {
   final TranslationState state;
   TranslationController(this.state);
 
+  void translateCard(CardModel card) async {
+    CardTranslation translation = await getTranslate(card);
 
-  Future<CardTranslations> getTranslate(String? text) async {
-    if (text != null) {
+  }
+
+  Future<CardTranslation> getTranslate(CardModel card) async {
+    String? text = card.bodyText;
+    if (text != null && state.commState.value != CommState.loading) {
+      state.commState.value = CommState.loading;
       try {
+        log("Translating");
         var translation = await state.translator.translate(
             prepareForTranslate(text),
-            from: state.baseLanguage,
+            from: state.baseLanguageFromApi,
             to: state.language.value);
-        return CardTranslations(bodyText: translation.toString());
+        state.commState.value = CommState.idle;
+        return CardTranslation(bodyText: translation.toString(), cardId: card.cardNum);
       } catch (e) {
-        //todo: rework
-        //returning a default error translation by now
-        return CardTranslations(bodyText: "Translation error");
+        state.commState.value = CommState.error;
+        return CardTranslation(cardId: card.cardNum);
       }
     }
-    return CardTranslations();
+    return CardTranslation(cardId: card.cardNum);
   }
 
   String prepareForTranslate(String text) {

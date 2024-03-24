@@ -21,14 +21,13 @@ class CardModel {
   final String? type;
   final int? lore;
   final String? rarity;
-  final int? cardNum;
+  final int cardNum;
   final String? bodyText;
   final String? foilImage;
   final int? willpower;
   final int? strength;
   final String? setId;
   final String? flavorText;
-  CardTranslations? cardTranslations;
 
   CardModel({
     this.artist,
@@ -45,14 +44,13 @@ class CardModel {
     this.type,
     this.lore,
     this.rarity,
-    this.cardNum,
+    required this.cardNum,
     this.bodyText,
     this.foilImage,
     this.willpower,
     this.strength,
     this.setId,
     this.flavorText,
-    this.cardTranslations,
   }) : enchantedImage = Utils()
                 .getEnchantedImage(int.parse("$cardNum$setNum")) ??
             enchantedImage; // Use function to determine enchantedImage as api doesn't provide
@@ -79,7 +77,6 @@ class CardModel {
     int? strength,
     String? setId,
     String? flavorText,
-    CardTranslations? cardTranslations,
   }) =>
       CardModel(
           artist: artist ?? this.artist,
@@ -103,7 +100,6 @@ class CardModel {
           strength: strength ?? this.strength,
           setId: setId ?? this.setId,
           flavorText: flavorText ?? this.flavorText,
-          cardTranslations: cardTranslations ?? this.cardTranslations,
        );
 
   factory CardModel.fromJson(Map<String, dynamic> json) => CardModel(
@@ -131,7 +127,3 @@ class CardModel {
       );
 }
 
-class CardTranslations {
-  String? bodyText;
-  CardTranslations({this.bodyText});
-}

@@ -5,6 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../constants.dart';
 import '../controllers/translation_controller/translation_controller.dart';
 import '../models/card.dart';
+import '../models/card_translation.dart';
 import '../utils.dart';
 
 class TranslationFrame extends StatelessWidget {
@@ -41,9 +42,9 @@ class TranslationFrame extends StatelessWidget {
                               ),
                               fit: BoxFit.fill)),
                       width: double.infinity,
-                      child: FutureBuilder<CardTranslations>(
+                      child: FutureBuilder<CardTranslation>(
                           future:
-                              translationService.getTranslate(card.bodyText),
+                              translationService.getTranslate(card),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {

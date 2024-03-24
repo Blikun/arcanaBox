@@ -1,8 +1,6 @@
-import 'package:arcana_box/widgets/text_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 import '../constants.dart';
 import '../controllers/translation_controller/translation_controller.dart';
@@ -24,7 +22,6 @@ class TranslationFrame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<TranslationController>(builder: (controller) {
-      // Initialize existingTranslation as null
       CardTranslation? existingTranslation;
 
       // Attempt to find a translation that matches the card's number
@@ -37,19 +34,14 @@ class TranslationFrame extends StatelessWidget {
         }
       }
 
-      // Check if a matching translation was found and if it has body text
-      if (existingTranslation == null || existingTranslation.bodyText == null) {
-        _hasContent.value = false;
-      } else {
-        _hasContent.value = true; // A valid translation exists
-      }
+      (existingTranslation == null || existingTranslation.bodyText == null)
+          ? _hasContent.value = false
+          : _hasContent.value = true;
 
-      // If there's no content, initiate translation
       if (_hasContent.isFalse) {
         controller.translateCard(card);
       }
 
-      // Build the widget based on whether content exists
       return Obx(() {
         return _hasContent.isTrue
             ? Animate(
@@ -117,7 +109,7 @@ class TranslationFrame extends StatelessWidget {
                   ],
                 ),
               )
-            : SizedBox();
+            : const SizedBox();
       });
     });
   }

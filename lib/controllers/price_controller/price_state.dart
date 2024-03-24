@@ -6,4 +6,6 @@ class PriceState {
 
     Rx<Map<int,Map<int, PriceDetails>>> priceDetails = Rx<Map<int,Map<int, PriceDetails>>>({});
 
+    final commState = CommState.idle.obs;
+
 }

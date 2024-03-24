@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:arcana_box/data/prices_data/prices_api_client.dart';
 import 'package:get/get.dart';
+import '../../constants.dart';
 import '../../models/price_details.dart';
 
 part 'price_state.dart';
@@ -28,6 +29,7 @@ class PriceController extends GetxController {
   }
 
   Future<void> updatePrice(int expansionId, int cardId) async {
+    state.commState.value = CommState.loading;
     int blueprintId = state.priceDetails.value[expansionId]!.entries
         .firstWhere((entry) => entry.key == cardId)
         .value
@@ -49,12 +51,13 @@ class PriceController extends GetxController {
       log("Card $cardId - $expansionId price updated");
     }
     update();
+    state.commState.value = CommState.idle;
   }
 
   Future<void> getPriceIfAbsent(int expansionId, int cardId) async {
     bool exists = state.priceDetails.value.containsKey(expansionId) &&
         state.priceDetails.value[expansionId]!.containsKey(cardId) &&
         state.priceDetails.value[expansionId]![cardId]!.priceCents != null;
-    if (!exists) updatePrice(expansionId, cardId);
+    if (!exists && state.commState.value == CommState.idle) updatePrice(expansionId, cardId);
   }
 }

@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:arcana_box/controllers/library_controller/library_controller.dart';
 import 'package:arcana_box/models/card.dart';
@@ -17,150 +16,179 @@ class CardDetailsDialog extends StatefulWidget {
   final int index;
   final TranslationController? translationService;
 
-  const CardDetailsDialog({super.key, this.translationService, required this.index});
+  const CardDetailsDialog(
+      {super.key, this.translationService, required this.index});
 
   @override
   CardDetailsDialogState createState() => CardDetailsDialogState();
 }
 
-class CardDetailsDialogState extends State<CardDetailsDialog> {
+class CardDetailsDialogState extends State<CardDetailsDialog>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _opacityAnimation;
+  late Animation<Offset> _slideAnimation;
   final LibraryController libraryController = Get.find<LibraryController>();
   final RxBool _showAlternateArt = false.obs;
   final RxBool _rotated = false.obs;
-  int _indexDisplacement = 0;
+  final RxDouble _dragAmount = 0.0.obs;
+  final RxInt _indexDisplacement = 0.obs;
+  bool _slideFromLeft = false;
   static const _sensibilityThreshold = 25;
-  double _dragAmount = 0.0; // Tracks the amount of horizontal drag delta
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 200));
+
+    // Initialize opacity to fully visible
+    _opacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeOut));
+
+    // Initialize slide animation with no movement
+    _slideAnimation = Tween<Offset>(begin: Offset.zero, end: Offset.zero)
+        .animate(CurvedAnimation(
+            parent: _animationController, curve: Curves.easeInOut));
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Get.back(),
-      onHorizontalDragStart: (details) {},
+      onHorizontalDragStart: (details) {
+        _animationController.reset();
+        // Prepare slide out effect with initial opacity animation
+        _opacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
+            CurvedAnimation(
+                parent: _animationController, curve: Curves.easeIn));
+        _slideAnimation =
+            Tween<Offset>(begin: Offset.zero, end: Offset(-_dragAmount.sign, 0))
+                .animate(CurvedAnimation(
+                    parent: _animationController, curve: Curves.easeInOut));
+      },
       onHorizontalDragUpdate: (details) {
-        setState(() {
-          _dragAmount += details.primaryDelta ?? 0.0; // Update the drag delta
-        });
+        _dragAmount.value += details.primaryDelta ?? 0.0;
       },
       onHorizontalDragEnd: (details) {
-        if (_dragAmount.abs() > _sensibilityThreshold) {
-          if (_dragAmount < 0 &&
-              _indexDisplacement < libraryController.state.library.length) {
-            _indexDisplacement++;
-            log('Dragged left $_indexDisplacement');
-          } else if (_dragAmount > 0 && _indexDisplacement + widget.index > 0) {
-            _indexDisplacement--;
-            log('Dragged right $_indexDisplacement');
-          }
+        if (_dragAmount.abs() > _sensibilityThreshold &&
+            widget.index + _indexDisplacement.value > 0 &&
+            widget.index + _indexDisplacement.value <=
+                libraryController.state.library.length) {
+          _slideFromLeft = _dragAmount > 0;
+          _animationController.forward().then((_) {
+            _slideFromLeft
+                ? {_indexDisplacement.value++}
+                : {_indexDisplacement.value--};
+            _rotated.value = false;
+            _dragAmount.value = 0;
+            // Set up slide-in effect with opacity fading in
+            _slideAnimation = Tween<Offset>(
+              begin: Offset(_slideFromLeft ? -1.5 : 1.5, 0),
+              end: Offset.zero,
+            ).animate(CurvedAnimation(
+                parent: _animationController, curve: Curves.easeOut));
+
+            _opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+                CurvedAnimation(
+                    parent: _animationController, curve: Curves.easeIn));
+
+            _animationController
+                .reset(); // Reset the controller to start animations from the beginning
+            _animationController
+                .forward(); // Start the animations for slide-in and fade-in effects
+          });
+        } else {
+          _dragAmount.value = 0;
         }
-        _showAlternateArt.value = false;
-        _dragAmount = 0.0; // Reset drag delta
-
-        // Trigger the exit animation and load the next/previous card
-        Builder(builder: (BuildContext context){
-          _animateCardExit(context, _dragAmount < 0 ? -1 : 1);
-          return SizedBox();
-
-        },);
       },
       child: Material(
         color: Colors.black54,
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Obx(() {
-            int newIndex = widget.index + _indexDisplacement;
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (newIndex == libraryController.state.library.length - 4 ||
-                  newIndex == libraryController.state.library.length - 1) {
-                libraryController.paginateLibrary();
-              }
-            });
-            final cardValue = libraryController.state.library[newIndex];
-            return Column(
-              children: [
-                cardDisplay(cardValue),
-                const SizedBox(height: 5),
-                if (widget.translationService != null)
-                  TranslationFrame(
-                      translationService: widget.translationService!,
-                      card: cardValue),
-              ],
-            );
-          }),
-        ),
-      ),
-    );
-  }
-
-  Widget cardDisplay(CardModel cardValue) {
-    return AnimatedScale(
-      scale: _rotated.isTrue ? 0.72 : 1,
-      curve: Curves.fastEaseInToSlowEaseOut,
-      duration: const Duration(milliseconds: 500),
-      child: Transform.rotate(
-        angle: _rotated.isTrue ? -math.pi / -2 : 0,
-        child: Transform.translate(
-          // Translate the card based on the drag delta for a swiping effect
-          offset: Offset(_dragAmount, 0),
-          child: Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(18),
-                child: Obx(() => _showAlternateArt.isTrue
-                    ? EnchantedDisplayCard(card: cardValue)
-                    : StandardDisplayCard(card: cardValue)),
-              ),
-              PriceInfoDetails(card: cardValue),
-              if (cardValue.enchantedImage?.isNotEmpty ?? false)
-                EnchantedButton(
-                    onToggle: () => _showAlternateArt.toggle(),
-                    showAlternateArt: _showAlternateArt),
-              if (cardValue.type == 'Location')
-                RotateCardButton(
-                    onRotate: () => _rotated.value = !_rotated.value,
-                    rotated: _rotated),
-            ],
+          child: AnimatedBuilder(
+            animation: Listenable.merge([_opacityAnimation, _slideAnimation]),
+            builder: (context, child) {
+              return FadeTransition(
+                opacity: _opacityAnimation,
+                child: SlideTransition(
+                  position: _slideAnimation,
+                  child: Obx(() {
+                    int index = widget.index + _indexDisplacement.value;
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (index == libraryController.state.library.length - 4 ||
+                          index == libraryController.state.library.length - 1) {
+                        libraryController.paginateLibrary();
+                      }
+                    });
+                    return cardSwipper(libraryController.state.library[index]);
+                  }),
+                ),
+              );
+            },
           ),
         ),
       ),
     );
   }
 
-  void _animateCardExit(BuildContext context, int direction) {
-// Start the exit animation
-    AnimationController controller = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: Scaffold.of(context),
+  Widget cardSwipper(CardModel cardValue) {
+    final tiltAngle = _dragAmount / 600;
+    const maxTiltRadians = 20 * math.pi / 180;
+    final angle =
+        math.min(math.max(tiltAngle, -maxTiltRadians), maxTiltRadians);
+
+    return AnimatedScale(
+      scale: _rotated.value ? 0.72 : 1,
+      curve: Curves.fastEaseInToSlowEaseOut,
+      duration: const Duration(milliseconds: 500),
+      child: Transform.rotate(
+        angle: _rotated.value ? -math.pi / 2 : 0,
+        child: Transform.translate(
+          offset: Offset(_dragAmount.value, 0),
+          child: Transform.rotate(
+              angle: angle,
+              child: Column(
+                children: [
+                  cardDisplay(cardValue),
+                  const SizedBox(height: 5),
+                  if (widget.translationService != null)
+                    TranslationFrame(
+                        translationService: widget.translationService!,
+                        card: cardValue),
+                ],
+              )),
+        ),
+      ),
     );
-    Animation<Offset> offsetAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: Offset(direction.toDouble(), 0.0),
-    ).animate(CurvedAnimation(parent: controller, curve: Curves.easeInOut));
-    controller.addListener(() {
-      setState(() {
-        _dragAmount =
-            offsetAnimation.value.dx * MediaQuery.of(context).size.width;
-      });
-    });
+  }
 
-    controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        setState(() {
-          // Reset drag delta
-          _dragAmount = 0.0;
-          // Load the next or previous card
-          int newIndex = widget.index + _indexDisplacement;
-          if (newIndex >= 0 &&
-              newIndex < libraryController.state.library.length) {
-            // Update the state to show the new card
-          } else {
-            // Handle the edge case where there are no more cards to show
-          }
-        });
-        controller.dispose();
-      }
-    });
-
-    controller.forward();
+  Widget cardDisplay(CardModel cardValue) {
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(18),
+          child: Obx(() => _showAlternateArt.isTrue
+              ? EnchantedDisplayCard(card: cardValue)
+              : StandardDisplayCard(card: cardValue)),
+        ),
+        PriceInfoDetails(card: cardValue),
+        if (cardValue.enchantedImage?.isNotEmpty ?? false)
+          EnchantedButton(
+              onToggle: () => _showAlternateArt.toggle(),
+              showAlternateArt: _showAlternateArt),
+        if (cardValue.type == 'Location')
+          RotateCardButton(
+              onRotate: () => _rotated.value = !_rotated.value,
+              rotated: _rotated),
+      ],
+    );
   }
 }

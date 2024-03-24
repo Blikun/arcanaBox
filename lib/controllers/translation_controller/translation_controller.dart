@@ -14,21 +14,30 @@ class TranslationController {
 
   void translateCard(CardModel card) async {
     CardTranslation translation = await getTranslate(card);
-    
+
     if (translation.bodyText != null) {
-      final Map<Lang, List<CardTranslation>> newTranslationState = state.translations.value;
+      final Map<Lang, List<CardTranslation>> storedTranslations = state.translations.value;
 
-      List<CardTranslation> languageTranslations = newTranslationState[state.appLanguage.value]!.toList();
+      if (storedTranslations[state.appLanguage.value] == null) {
+        storedTranslations[state.appLanguage.value] = [];
+      }
 
-      languageTranslations[card.cardNum] = translation;
+      List<CardTranslation> actualLangTranslations = storedTranslations[state.appLanguage.value]!;
 
-      newTranslationState[state.appLanguage.value] = languageTranslations;
+      int existingTranslationIndex = actualLangTranslations.indexWhere((cardTranslation) => cardTranslation.cardId == card.cardNum);
 
-      state.translations.value = newTranslationState;
+      if (existingTranslationIndex != -1) {
+        actualLangTranslations[existingTranslationIndex] = translation;
+      } else {
+        actualLangTranslations.add(translation);
+      }
 
-      log("ñe");
+      state.translations.value = storedTranslations;
+
+      log("${card.name} - Translated");
     }
   }
+
 
   Future<CardTranslation> getTranslate(CardModel card) async {
     String? text = card.bodyText;

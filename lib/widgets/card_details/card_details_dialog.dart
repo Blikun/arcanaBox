@@ -1,4 +1,3 @@
-
 import 'package:arcana_box/controllers/library_controller/library_controller.dart';
 import 'package:arcana_box/models/card.dart';
 import 'package:arcana_box/widgets/card_details/enchanted_button.dart';
@@ -33,7 +32,8 @@ class CardDetailsDialogState extends State<CardDetailsDialog>
   final RxBool _rotated = false.obs;
   final RxDouble _dragAmount = 0.0.obs;
   final RxInt _indexDisplacement = 0.obs;
-  bool _slideFromLeft = false;
+  bool _slideFromRight = false;
+  bool _canSwipe = true;
   static const _sensibilityThreshold = 25;
 
   @override
@@ -77,20 +77,25 @@ class CardDetailsDialogState extends State<CardDetailsDialog>
         _dragAmount.value += details.primaryDelta ?? 0.0;
       },
       onHorizontalDragEnd: (details) {
-        if (_dragAmount.abs() > _sensibilityThreshold &&
-            widget.index + _indexDisplacement.value > 0 &&
-            widget.index + _indexDisplacement.value <=
-                libraryController.state.library.length) {
-          _slideFromLeft = _dragAmount > 0;
+        _slideFromRight = _dragAmount < 0;
+
+        if (_slideFromRight) {
+          _canSwipe = widget.index + _indexDisplacement.value <=
+              libraryController.state.library.length;
+        } else {
+          _canSwipe = widget.index + _indexDisplacement.value > 0;
+        }
+        if (_dragAmount.abs() > _sensibilityThreshold && _canSwipe) {
           _animationController.forward().then((_) {
-            _slideFromLeft
+            _slideFromRight
                 ? {_indexDisplacement.value++}
                 : {_indexDisplacement.value--};
             _rotated.value = false;
             _dragAmount.value = 0;
+            _showAlternateArt.value = false;
             // Set up slide-in effect with opacity fading in
             _slideAnimation = Tween<Offset>(
-              begin: Offset(_slideFromLeft ? -1.5 : 1.5, 0),
+              begin: Offset(_slideFromRight ? 1.5 : -1.5, 0),
               end: Offset.zero,
             ).animate(CurvedAnimation(
                 parent: _animationController, curve: Curves.easeOut));

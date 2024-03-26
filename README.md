@@ -1,4 +1,4 @@
 # arcana_box
 
-Lorcana TCG collector tools flutter app
+on-course Lorcana TCG collector tools flutter app
 

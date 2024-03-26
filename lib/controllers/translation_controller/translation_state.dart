@@ -7,7 +7,7 @@ class TranslationState {
     final Rx<Lang> appLanguage = Lang.es.obs;
     final baseLanguageFromApi = Lang.en;
     final translator = GoogleTranslator();
-    final Rx<Map<Lang,List<CardTranslation>>> translations = Rx<Map<Lang,List<CardTranslation>>>({});
+    final Rx<Map<int,Map<Lang,List<CardTranslation>>>> translations = Rx<Map<int,Map<Lang,List<CardTranslation>>>>({});
 
 }
 

@@ -58,6 +58,6 @@ class PriceController extends GetxController {
     bool exists = state.priceDetails.value.containsKey(expansionId) &&
         state.priceDetails.value[expansionId]!.containsKey(cardId) &&
         state.priceDetails.value[expansionId]![cardId]!.priceCents != null;
-    if (!exists && state.commState.value == CommState.idle) updatePrice(expansionId, cardId);
+    if (!exists && state.commState.value != CommState.loading) updatePrice(expansionId, cardId);
   }
 }

@@ -9,14 +9,17 @@ import '../../models/card_translation.dart';
 
 part 'translation_state.dart';
 
-class TranslationController extends GetxController{
+class TranslationController extends GetxController {
   final TranslationState state;
 
   TranslationController(this.state);
 
   void translateCard(CardModel card) async {
     final currentLanguage = state.appLanguage.value;
-    final translationsForCurrentLanguage = state.translations.value.putIfAbsent(currentLanguage, () => []);
+    state.translations.value.putIfAbsent(card.setNum!, () => {});
+
+    final translationsForCurrentLanguage = state.translations.value[card.setNum]!
+        .putIfAbsent(currentLanguage, () => []);
 
     final existingTranslation = translationsForCurrentLanguage
         .firstWhereOrNull((translation) => translation.cardId == card.cardNum);
@@ -26,7 +29,8 @@ class TranslationController extends GetxController{
     if (translation.bodyText == null) return;
 
     // Update or add the new translation
-    final translationIndex = translationsForCurrentLanguage.indexWhere((t) => t.cardId == card.cardNum);
+    final translationIndex = translationsForCurrentLanguage
+        .indexWhere((translation) => translation.cardId == card.cardNum);
     if (translationIndex != -1) {
       translationsForCurrentLanguage[translationIndex] = translation;
     } else {
@@ -35,7 +39,6 @@ class TranslationController extends GetxController{
     update();
     log("${card.name} - Translated");
   }
-
 
   Future<CardTranslation> getTranslate(CardModel card) async {
     String? text = card.bodyText;

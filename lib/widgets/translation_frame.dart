@@ -26,7 +26,7 @@ class TranslationFrame extends StatelessWidget {
 
       // Attempt to find a translation that matches the card's number
       for (var translation in controller
-              .state.translations.value[controller.state.appLanguage.value] ??
+              .state.translations.value[card.setNum]?[controller.state.appLanguage.value] ??
           []) {
         if (translation.cardId == card.cardNum) {
           existingTranslation = translation;
@@ -80,7 +80,7 @@ class TranslationFrame extends StatelessWidget {
                                     .buildCoolText(translationService
                                         .state
                                         .translations
-                                        .value[translationService
+                                        .value[card.setNum]![translationService
                                             .state.appLanguage.value]!
                                         .firstWhere((translation) =>
                                             translation.cardId == card.cardNum)
